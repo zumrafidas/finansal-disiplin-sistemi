@@ -2,81 +2,97 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>FİDAS - Kesin PDF Çözümü</title>
+    <title>MatFin - Kişisel Finans Koçunuz</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    
     <style>
-        :root { --p:#818cf8; --s:#34d399; --d:#fb7185; --bg:#020617; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-        .card { background: #0f172a; padding: 30px; border-radius: 32px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); width: 100%; max-width: 480px; border: 1px solid #1e293b; text-align: center; }
+        :root { --p:#6366f1; --s:#10b981; --d:#f43f5e; --bg:#020617; --card:#0f172a; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: white; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .card { background: var(--card); padding: 40px; border-radius: 35px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6); width: 100%; max-width: 500px; border: 1px solid #1e293b; position: relative; overflow: hidden; }
         
-        #welcome-screen { display: block; }
-        #app-screen { display: none; }
-        
-        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; text-align: left; }
-        label { display: block; font-size: 11px; font-weight: 700; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase; }
-        input { width: 100%; background: #1e293b; border: 1px solid #334155; padding: 12px; border-radius: 12px; color: white; font-size: 15px; outline: none; }
-        
-        .btn { width: 100%; padding: 16px; border: none; border-radius: 14px; color: white; font-weight: 800; cursor: pointer; margin-top: 15px; transition: 0.3s; }
-        .btn-primary { background: linear-gradient(135deg, var(--p), #6366f1); }
-        .btn-secondary { background: #1e293b; border: 1px solid #334155; color: #94a3b8; margin-top: 10px; }
+        /* Modern Hesap Kalkanı Logosu */
+        .shield-logo { width: 80px; height: 80px; background: linear-gradient(135deg, var(--p), var(--s)); border-radius: 22px; margin: 0 auto 25px; display: flex; align-items: center; justify-content: center; position: relative; box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4); }
+        .shield-logo::after { content: "🛡️"; font-size: 40px; }
 
-        .results { margin-top: 25px; border-top: 1px solid #334155; padding-top: 20px; display: none; }
+        h1 { font-size: 32px; background: linear-gradient(to right, #818cf8, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; font-weight: 850; letter-spacing: -1px; }
         
-        /* PDF İÇİNDE HER ŞEYİN GÖRÜNMESİ İÇİN ÖZEL ALAN */
-        #pdf-capture { 
-            background: #0f172a; 
-            padding: 20px; 
-            border-radius: 20px;
-        }
-        
-        .score-box { background: #1e293b; padding: 15px; border-radius: 20px; margin-bottom: 15px; border: 1px solid #334155; }
-        .chart-container { width: 220px; height: 220px; margin: 0 auto 15px auto; position: relative; }
-        .insight-card { background: rgba(30, 41, 59, 0.5); padding: 15px; border-radius: 15px; font-size: 13px; text-align: left; border-left: 4px solid var(--p); color: #cbd5e1; }
+        /* Giriş Ekranı Adımları */
+        .step-container { display: flex; justify-content: space-between; margin: 30px 0; text-align: center; }
+        .step { flex: 1; font-size: 11px; color: #64748b; }
+        .step-icon { width: 35px; height: 35px; background: #1e293b; border-radius: 10px; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; border: 1px solid #334155; }
+
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 25px; text-align: left; }
+        label { display: block; font-size: 11px; font-weight: 700; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        input { width: 100%; background: #1e293b; border: 1px solid #334155; padding: 14px; border-radius: 15px; color: white; font-size: 16px; outline: none; transition: 0.3s; box-sizing: border-box; }
+        input:focus { border-color: var(--p); box-shadow: 0 0 15px rgba(99, 102, 241, 0.2); }
+
+        .btn { width: 100%; padding: 18px; border: none; border-radius: 18px; color: white; font-weight: 800; cursor: pointer; margin-top: 20px; transition: 0.3s; font-size: 16px; }
+        .btn-primary { background: linear-gradient(135deg, var(--p), #4f46e5); box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4); }
+        .btn-secondary { background: #1e293b; border: 1px solid #334155; color: #94a3b8; }
+        .btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
+
+        .results { display: none; margin-top: 30px; border-top: 2px solid #1e293b; padding-top: 25px; animation: fadeIn 0.6s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Analiz Kartları */
+        .coach-section { background: rgba(99, 102, 241, 0.1); border: 1px dashed var(--p); border-radius: 20px; padding: 20px; margin-top: 20px; text-align: left; }
+        .coach-header { font-weight: 800; color: var(--p); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .insight-text { font-size: 14px; line-height: 1.6; color: #cbd5e1; }
+        .math-tip { margin-top: 15px; font-size: 12px; color: var(--s); font-style: italic; background: rgba(16, 185, 129, 0.1); padding: 10px; border-radius: 10px; }
+
+        .score-display { font-size: 48px; font-weight: 900; color: var(--s); margin: 10px 0; }
+        .chart-box { width: 100%; max-width: 240px; margin: 20px auto; }
     </style>
 </head>
 <body>
 
 <div class="card">
     <div id="welcome-screen">
-        <div style="font-size: 40px; margin-bottom: 15px;">🚀</div>
-        <h1 style="font-size: 28px; background: linear-gradient(to right, #818cf8, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800;">FİDAS ANALİZ</h1>
-        <button class="btn btn-primary" onclick="baslat()">BAŞLAT</button>
+        <div class="shield-logo"></div>
+        <h1>MATFİN</h1>
+        <p style="color:#94a3b8; font-size: 15px; margin-top: 10px;">9. Sınıf Matematik Müfredatı ile <br>Finansal Check-up Merkezi</p>
+        
+        <div class="step-container">
+            <div class="step"><div class="step-icon">📝</div>Veri Gir</div>
+            <div class="step"><div class="step-icon">⚙️</div>Analiz Et</div>
+            <div class="step"><div class="step-icon">📋</div>Rapor Al</div>
+        </div>
+
+        <button class="btn btn-primary" onclick="baslat()">ANALİZİ BAŞLAT</button>
     </div>
 
-    <div id="app-screen">
+    <div id="app-screen" style="display:none;">
+        <h1>ANALİZ PANELİ</h1>
         <div class="input-grid">
-            <div style="grid-column: span 2;"><label>Adınız</label><input type="text" id="isim" placeholder="Zümra"></div>
+            <div style="grid-column: span 2;"><label>Adınız</label><input type="text" id="isim" placeholder="Adınızı buraya yazın..."></div>
             <div><label>Gelir (₺)</label><input type="number" id="gelir"></div>
             <div><label>Yaş</label><input type="number" id="yas"></div>
             <div style="grid-column: span 2;"><label>Sabit Giderler (₺)</label><input type="number" id="gider"></div>
             <div style="grid-column: span 2;"><label>Plansız Harcamalar (₺)</label><input type="number" id="plansiz"></div>
         </div>
-        <button class="btn btn-primary" onclick="hesapla()">ANALİZ ET</button>
+        <button class="btn btn-primary" onclick="hesapla()">HESAPLA VE YORUMLA</button>
 
         <div id="sonuclar" class="results">
-            <div id="pdf-capture">
-                <div class="score-box">
-                    <div id="hitap" style="color:var(--s); font-weight:bold; margin-bottom:5px;"></div>
-                    <div id="skorDeger" style="font-size: 40px; font-weight: 900;">%0</div>
-                    <p style="font-size: 10px; color:#94a3b8; margin:0;">DİSİPLİN PUANI</p>
+            <div id="pdf-area">
+                <div id="hitap" style="font-weight: 800; font-size: 18px; color: var(--p);"></div>
+                <div class="score-display" id="skorDeger">%0</div>
+                <p style="color:#64748b; font-size: 11px; letter-spacing: 2px; margin-bottom: 20px;">GENEL DİSİPLİN SKORU</p>
+
+                <div class="chart-box"><canvas id="butceGrafik"></canvas></div>
+
+                <div class="coach-section">
+                    <div class="coach-header" id="coach-title">🚀 Finans Koçu</div>
+                    <div id="analizYorum" class="insight-text"></div>
+                    <div id="mat-tip" class="math-tip"></div>
                 </div>
-                <div class="chart-container">
-                    <canvas id="butceGrafik"></canvas>
-                </div>
-                <div id="detayAnaliz" class="insight-card"></div>
             </div>
-            
-            <button class="btn btn-secondary" onclick="pdfIndir()">📥 RAPORU PDF OLARAK İNDİR</button>
+            <button class="btn btn-secondary" onclick="pdfIndir()">📥 DETAYLI RAPORU İNDİR (PDF)</button>
         </div>
     </div>
 </div>
 
 <script>
-    let myChart = null;
-
     function baslat() {
         document.getElementById('welcome-screen').style.display = 'none';
         document.getElementById('app-screen').style.display = 'block';
@@ -89,56 +105,56 @@
         const plan = parseFloat(document.getElementById('plansiz').value) || 0;
         const tasarruf = Math.max(0, gel - (zor + plan));
 
-        let finalSkor = Math.max(0, Math.min(100, Math.round(((tasarruf/gel)*70) + (1-(plan/gel))*30)));
+        let tOran = (tasarruf / gel) * 100;
+        let pOran = (plan / gel) * 100;
+        let skor = Math.round((tOran * 0.7) + (30 - (pOran * 1.5)));
+        let finalSkor = Math.max(0, Math.min(100, skor));
 
         document.getElementById('sonuclar').style.display = 'block';
         document.getElementById('skorDeger').innerText = "%" + finalSkor;
         document.getElementById('hitap').innerText = `Merhaba ${isim},`;
-        document.getElementById('detayAnaliz').innerText = `Finansal bütçeniz analiz edildi. Tasarruf oranınız %${((tasarruf/gel)*100).toFixed(1)}.`;
+        document.getElementById('coach-title').innerText = `🚀 ${isim}'in Finans Koçu`;
 
+        // Detaylı Analiz Mantığı
+        let yorum = "";
+        let matIpucu = "";
+
+        if(finalSkor > 75) {
+            yorum = `Mükemmel bir denge! Matematiksel modelin, finansal kararlarının çok tutarlı olduğunu gösteriyor. Gelirinin %${tOran.toFixed(1)}'ini tasarrufa dönüştürmen harika bir oran.`;
+            matIpucu = "Matematiksel İpucu: Bu tasarruf hızıyla, bileşik faiz etkisiyle birikimlerin üstel bir fonksiyon (exponential) olarak artacaktır.";
+        } else if(finalSkor > 45) {
+            yorum = `Bütçen güvenli bölgede ancak sızıntılar var. Plansız harcamaların (%${pOran.toFixed(1)}) bütçende gedikler açıyor. Bu oran ideal olan %15'in üzerinde.`;
+            matIpucu = "Matematiksel İpucu: Harcamalarını %5 oranında azaltsan bile, tasarruf miktarında doğrusal bir artış gözlemleyeceksin.";
+        } else {
+            yorum = `Dikkat! Harcamaların gelirinle orantısız görünüyor. Mevcut tabloya göre 9. sınıf oran-orantı mantığıyla, giderlerin geliri yutmak üzere.`;
+            matIpucu = "Matematiksel İpucu: Acilen plansız giderleri kısıp tasarruf değişkenini pozitif hale getirmelisin.";
+        }
+
+        document.getElementById('analizYorum').innerText = yorum;
+        document.getElementById('mat-tip').innerText = matIpucu;
+
+        // Grafik
         const ctx = document.getElementById('butceGrafik').getContext('2d');
-        if (myChart) myChart.destroy();
-
-        myChart = new Chart(ctx, {
+        if (window.myChart) window.myChart.destroy();
+        window.myChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['Sabit', 'Plansız', 'Tasarruf'],
-                datasets: [{
-                    data: [zor, plan, tasarruf],
-                    backgroundColor: ['#818cf8', '#fb7185', '#34d399'],
-                    borderWidth: 0
-                }]
+                labels: ['Sabit', 'İstekler', 'Tasarruf'],
+                datasets: [{ data: [zor, plan, tasarruf], backgroundColor: ['#6366f1', '#f43f5e', '#10b981'], borderWidth: 0 }]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                animation: false,
-                plugins: { legend: { display: true, position: 'bottom', labels: { color: '#94a3b8' } } }
-            }
+            options: { animation: false, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } } }
         });
     }
 
     function pdfIndir() {
-        const element = document.getElementById('pdf-capture');
-        const isim = document.getElementById('isim').value || "Fidas";
-        
-        // PDF sorununu çözen kritik ayarlar
-        const opt = {
-            margin:       10,
-            filename:     `${isim}_Finansal_Rapor.pdf`,
-            image:        { type: 'jpeg', quality: 1 },
-            html2canvas:  { 
-                scale: 3, // Çözünürlüğü artırır
-                useCORS: true,
-                letterRendering: true,
-                scrollY: 0, // Kayma sorununu önler
-                backgroundColor: '#0f172a' 
-            },
-            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-
-        // Render işlemi
-        html2pdf().from(element).set(opt).save();
+        const element = document.getElementById('pdf-area');
+        const isim = document.getElementById('isim').value || "Matfin";
+        html2pdf().from(element).set({
+            margin: 10,
+            filename: `${isim}_Matfin_Rapor.pdf`,
+            html2canvas: { scale: 3, backgroundColor: '#0f172a' },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        }).save();
     }
 </script>
 </body>
