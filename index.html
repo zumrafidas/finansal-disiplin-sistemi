@@ -1,97 +1,54 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <title>FİDAS Pro - Finansal Karar Destek Sistemi</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        :root { --p:#6366f1; --s:#10b981; --d:#ef4444; --bg:#0f172a; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: white; display: flex; justify-content: center; padding: 20px; }
-        .card { background: #1e293b; padding: 30px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); width: 100%; max-width: 450px; border: 1px solid #334155; }
-        h1 { font-size: 28px; background: linear-gradient(90deg, #818cf8, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
-        .input-box { margin-bottom: 20px; }
-        label { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-bottom: 8px; }
-        input { width: 100%; background: #0f172a; border: 1px solid #334155; padding: 12px; border-radius: 12px; color: white; font-size: 16px; box-sizing: border-box; }
-        input:focus { border-color: var(--p); outline: none; box-shadow: 0 0 10px rgba(99, 102, 241, 0.3); }
-        button { width: 100%; padding: 16px; background: var(--p); border: none; border-radius: 12px; color: white; font-weight: 700; cursor: pointer; transition: 0.3s; }
-        button:hover { background: #4f46e5; transform: scale(1.02); }
-        .stats { margin-top: 30px; display: none; padding-top: 20px; border-top: 1px solid #334155; }
-        .score-circle { width: 100px; height: 100px; border-radius: 50%; border: 5px solid var(--p); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900; margin: 0 auto 20px; }
-        .insight { background: #334155; padding: 15px; border-radius: 12px; font-size: 14px; margin-top: 15px; line-height: 1.6; }
-        .eco-mode { color: var(--s); font-weight: bold; }
-    </style>
-</head>
-<body>
-
-<div class="card">
-    <h1>FİDAS PRO</h1>
-    <p style="color:#94a3b8; font-size: 14px; margin-bottom: 25px;">Yapay Zeka Destekli Finansal Analiz</p>
-
-    <div class="input-box">
-        <label>Aylık Sabit Gelir (₺)</label>
-        <input type="number" id="gelir" placeholder="0.00">
-    </div>
-    <div class="input-box">
-        <label>Zorunlu Giderler (₺)</label>
-        <input type="number" id="gider" placeholder="0.00">
-    </div>
-    <div class="input-box">
-        <label>Dürtüsel / Plansız Harcamalar (₺)</label>
-        <input type="number" id="plansiz" placeholder="0.00">
-    </div>
-
-    <button onclick="superAnaliz()">DERİN ANALİZİ BAŞLAT</button>
-
-    <div id="stats" class="stats">
-        <div id="skorDaire" class="score-circle">0</div>
-        <div id="yorumKutusu" class="insight"></div>
-        <div id="gelecekTahmini" class="insight" style="border-left: 4px solid var(--s);"></div>
-    </div>
+<div class="input-box">
+    <label>Yaşınız</label>
+    <input type="number" id="yas" placeholder="Örn: 15">
 </div>
 
 <script>
 function superAnaliz() {
+    const yas = parseInt(document.getElementById("yas").value);
     const gel = parseFloat(document.getElementById("gelir").value);
     const zor = parseFloat(document.getElementById("gider").value);
     const plan = parseFloat(document.getElementById("plansiz").value);
 
-    if (isNaN(gel) || isNaN(zor)) return alert("Verileri eksiksiz giriniz.");
+    if (isNaN(yas) || isNaN(gel)) return alert("Lütfen tüm verileri giriniz.");
 
     const toplamGider = zor + plan;
     const tasarruf = gel - toplamGider;
-    
-    // MATEMATİKSEL MODEL v3 (LOGARİTMİK CEZA SİSTEMİ)
-    // Sadece oran değil, dürtüselliğin şiddetini ölçüyoruz
-    let tasarrufOrani = tasarruf / gel;
-    let durtusellikEndeksi = plan / (zor + 1); // Zorunlu giderlere oranla dürtüsellik
+    const tasarrufOrani = tasarruf / gel;
 
-    let skor = (tasarrufOrani * 70) + (30 - (durtusellikEndeksi * 50));
+    // YAŞA BAĞLI MATEMATİKSEL MODELLEME
+    // Yaş ilerledikçe plansız harcamanın toleransı azalır
+    let yasCarpani = yas / 15; // 15 yaş referans noktası
+    let cezaPuani = (plan / gel) * 100 * yasCarpani;
+    
+    let skor = (tasarrufOrani * 100) - cezaPuani + 20; // +20 baz puan
     let finalSkor = Math.max(0, Math.min(100, Math.round(skor)));
 
     document.getElementById("stats").style.display = "block";
     document.getElementById("skorDaire").innerText = "%" + finalSkor;
-    
-    // Renk Değişimi
-    document.getElementById("skorDaire").style.borderColor = finalSkor > 70 ? "var(--s)" : (finalSkor > 40 ? "var(--warning)" : "var(--d)");
 
-    // WOW ANALİZLERİ
-    let mesaj = "";
-    if(plan > zor * 0.5) {
-        mesaj = "⚠️ <b>KRİTİK UYARI:</b> Plansız harcamalarınız zorunlu giderlerinizin yarısını aşmış. Bu, matematiksel olarak 'finansal savurganlık' evresidir.";
-    } else {
-        mesaj = "✅ <b>DURUM:</b> Bütçe yönetimi dengeli. Dürtüsellik kontrol altında.";
+    // FİNANSAL YAŞ ANALİZİ (Wow Faktörü)
+    let finansalYas;
+    if (finalSkor > 80) finansalYas = yas + 10;
+    else if (finalSkor > 50) finansalYas = yas;
+    else finansalYas = Math.max(5, yas - 7);
+
+    let mesaj = `👤 <b>Profil Analizi:</b> Gerçek yaşın ${yas} ama finansal kararların <b>${finansalYas} yaş</b> olgunluğunda görünüyor.<br><br>`;
+    
+    if (finansalYas > yas) {
+        mesaj += "🌟 <b>Mükemmel:</b> Geleceğini şimdiden inşa ediyorsun. Bu disiplin seni yaşıtlarının çok önüne geçirecek.";
+    } else if (finansalYas < yas) {
+        mesaj += "⚠️ <b>Dikkat:</b> Harcamaların, gelirine göre biraz 'çocuksu' kalıyor. Matematiksel olarak bütçen alarm veriyor!";
     }
 
-    // Fırsat Maliyeti Analizi (Asgari ücret saatlik 100 TL varsayımıyla)
-    let calismaSaati = Math.round(plan / 100);
-    mesaj += `<br><br>💡 <b>FARKINDALIK:</b> Sırf plansız harcamaların için yaklaşık <b>${calismaSaati} saat</b> çalışman gerekiyor.`;
-
+    // Gelecek Tahmini ve Tasarruf İpucu
+    let birikim = tasarruf * 12;
+    let tavsiye = plan * 0.2; // Plansız harcamadan %20 tasarruf etse
+    
     document.getElementById("yorumKutusu").innerHTML = mesaj;
-
-    // 12 Aylık Projeksiyon ve Bileşik Etki
-    let yilSonu = tasarruf * 12;
-    document.getElementById("gelecekTahmini").innerHTML = `🚀 <b>12 AY SONRA:</b> Bu disiplinle devam edersen birikimin <b>${yilSonu.toLocaleString()} ₺</b> olacak. <br><br> <span class='eco-mode'>Eğer plansız harcamaları %50 azaltırsan, birikimin ${(yilSonu + (plan*6)).toLocaleString()} ₺'ye çıkabilir!</span>`;
+    document.getElementById("gelecekTahmini").innerHTML = `
+        📅 <b>1 Yıllık Tahmin:</b> ${birikim.toLocaleString()} ₺ biriktirebilirsin.<br><br>
+        💡 <b>Zümra'nın İpucu:</b> Plansız harcamalarından her ay sadece <b>${tavsiye.toFixed(2)} ₺</b> kısarsan, yıl sonunda fazladan <b>${(tavsiye*12).toFixed(2)} ₺</b> cebinde kalır!
+    `;
 }
 </script>
-</body>
-</html>
