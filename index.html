@@ -2,12 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>FİDAS - Finansal Disiplin Analiz Sistemi</title>
-    
-    <meta name="description" content="FİDAS: 9. Sınıf Matematik Müfredatı ile geliştirilmiş Finansal Disiplin Analiz Sistemi. Zümra tarafından TEKNOFEST için hazırlanmıştır.">
-    <meta name="keywords" content="FİDAS, Finansal Disiplin, Zümra, Teknofest Projesi, Matematiksel Analiz, Bütçe Takibi">
-    <meta name="author" content="Zümra">
-    
+    <title>FİDAS - Kesin PDF Çözümü</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -20,61 +15,61 @@
         #welcome-screen { display: block; }
         #app-screen { display: none; }
         
-        .logo-icon { width: 70px; height: 70px; background: linear-gradient(135deg, var(--p), var(--s)); border-radius: 20px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 35px; }
-        h1 { font-size: 28px; background: linear-gradient(to right, #818cf8, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; font-weight: 800; }
-        
         .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; text-align: left; }
         label { display: block; font-size: 11px; font-weight: 700; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase; }
-        input { width: 100%; background: #1e293b; border: 1px solid #334155; padding: 12px; border-radius: 12px; color: white; font-size: 15px; box-sizing: border-box; outline: none; }
+        input { width: 100%; background: #1e293b; border: 1px solid #334155; padding: 12px; border-radius: 12px; color: white; font-size: 15px; outline: none; }
         
-        .btn { width: 100%; padding: 16px; border: none; border-radius: 14px; color: white; font-weight: 800; cursor: pointer; margin-top: 15px; transition: 0.3s; font-size: 15px; }
+        .btn { width: 100%; padding: 16px; border: none; border-radius: 14px; color: white; font-weight: 800; cursor: pointer; margin-top: 15px; transition: 0.3s; }
         .btn-primary { background: linear-gradient(135deg, var(--p), #6366f1); }
         .btn-secondary { background: #1e293b; border: 1px solid #334155; color: #94a3b8; margin-top: 10px; }
 
         .results { margin-top: 25px; border-top: 1px solid #334155; padding-top: 20px; display: none; }
-        .chart-container { width: 100%; max-width: 230px; margin: 15px auto; }
-        .score-box { background: #1e293b; padding: 15px; border-radius: 20px; margin-bottom: 15px; border: 1px solid #334155; }
-        .insight-card { background: rgba(30, 41, 59, 0.5); padding: 15px; border-radius: 15px; font-size: 13px; text-align: left; line-height: 1.5; border-left: 4px solid var(--p); color: #cbd5e1; }
         
-        /* PDF İÇİN ÖZEL STİL (SADECE ÇIKTIDA GÖZÜKÜR) */
-        #pdf-content { padding: 10px; }
+        /* PDF İÇİNDE HER ŞEYİN GÖRÜNMESİ İÇİN ÖZEL ALAN */
+        #pdf-capture { 
+            background: #0f172a; 
+            padding: 20px; 
+            border-radius: 20px;
+        }
+        
+        .score-box { background: #1e293b; padding: 15px; border-radius: 20px; margin-bottom: 15px; border: 1px solid #334155; }
+        .chart-container { width: 220px; height: 220px; margin: 0 auto 15px auto; position: relative; }
+        .insight-card { background: rgba(30, 41, 59, 0.5); padding: 15px; border-radius: 15px; font-size: 13px; text-align: left; border-left: 4px solid var(--p); color: #cbd5e1; }
     </style>
 </head>
 <body>
 
-<div class="card" id="main-card">
+<div class="card">
     <div id="welcome-screen">
-        <div class="logo-icon">📊</div>
-        <h1>FİDAS ANALİZ</h1>
-        <p style="color:#94a3b8; font-size: 14px; margin: 20px 0;">Finansal raporunuzu oluşturun ve PDF olarak indirin.</p>
-        <button class="btn btn-primary" onclick="baslat()">SİSTEME GİRİŞ YAP</button>
+        <div style="font-size: 40px; margin-bottom: 15px;">🚀</div>
+        <h1 style="font-size: 28px; background: linear-gradient(to right, #818cf8, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800;">FİDAS ANALİZ</h1>
+        <button class="btn btn-primary" onclick="baslat()">BAŞLAT</button>
     </div>
 
     <div id="app-screen">
-        <h1>VERİ GİRİŞİ</h1>
         <div class="input-grid">
-            <div style="grid-column: span 2;"><label>Adınız</label><input type="text" id="isim" placeholder="İsminizi Yazın"></div>
-            <div><label>Yaş</label><input type="number" id="yas" placeholder="15"></div>
-            <div><label>Gelir (₺)</label><input type="number" id="gelir" placeholder="0"></div>
-            <div style="grid-column: span 2;"><label>Sabit Giderler (₺)</label><input type="number" id="gider" placeholder="1000"></div>
-            <div style="grid-column: span 2;"><label>Plansız Harcamalar (₺)</label><input type="number" id="plansiz" placeholder="500"></div>
+            <div style="grid-column: span 2;"><label>Adınız</label><input type="text" id="isim" placeholder="Zümra"></div>
+            <div><label>Gelir (₺)</label><input type="number" id="gelir"></div>
+            <div><label>Yaş</label><input type="number" id="yas"></div>
+            <div style="grid-column: span 2;"><label>Sabit Giderler (₺)</label><input type="number" id="gider"></div>
+            <div style="grid-column: span 2;"><label>Plansız Harcamalar (₺)</label><input type="number" id="plansiz"></div>
         </div>
-        
-        <button class="btn btn-primary" onclick="hesapla()">ANALİZİ OLUŞTUR</button>
+        <button class="btn btn-primary" onclick="hesapla()">ANALİZ ET</button>
 
         <div id="sonuclar" class="results">
-            <div id="pdf-content">
+            <div id="pdf-capture">
                 <div class="score-box">
-                    <div id="hitap" style="color:var(--s); font-weight:bold; margin-bottom:5px; font-size:16px;"></div>
-                    <div id="skorDeger" style="font-size: 40px; font-weight: 900; color:white;">%0</div>
-                    <div style="font-size: 10px; color:#94a3b8;">DİSİPLİN PUANI</div>
+                    <div id="hitap" style="color:var(--s); font-weight:bold; margin-bottom:5px;"></div>
+                    <div id="skorDeger" style="font-size: 40px; font-weight: 900;">%0</div>
+                    <p style="font-size: 10px; color:#94a3b8; margin:0;">DİSİPLİN PUANI</p>
                 </div>
                 <div class="chart-container">
                     <canvas id="butceGrafik"></canvas>
                 </div>
                 <div id="detayAnaliz" class="insight-card"></div>
             </div>
-            <button class="btn btn-secondary" onclick="pdfIndir()">📥 PDF OLARAK KAYDET</button>
+            
+            <button class="btn btn-secondary" onclick="pdfIndir()">📥 RAPORU PDF OLARAK İNDİR</button>
         </div>
     </div>
 </div>
@@ -99,10 +94,10 @@
         document.getElementById('sonuclar').style.display = 'block';
         document.getElementById('skorDeger').innerText = "%" + finalSkor;
         document.getElementById('hitap').innerText = `Merhaba ${isim},`;
-        document.getElementById('detayAnaliz').innerHTML = `Finansal analiziniz tamamlandı. Plansız harcamalarınız bütçenizin %${((plan/gel)*100).toFixed(1)}'ini oluşturuyor.`;
+        document.getElementById('detayAnaliz').innerText = `Finansal bütçeniz analiz edildi. Tasarruf oranınız %${((tasarruf/gel)*100).toFixed(1)}.`;
 
         const ctx = document.getElementById('butceGrafik').getContext('2d');
-        if (myChart) { myChart.destroy(); }
+        if (myChart) myChart.destroy();
 
         myChart = new Chart(ctx, {
             type: 'doughnut',
@@ -114,31 +109,36 @@
                     borderWidth: 0
                 }]
             },
-            options: { 
-                animation: false, 
-                plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } } 
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: false,
+                plugins: { legend: { display: true, position: 'bottom', labels: { color: '#94a3b8' } } }
             }
         });
     }
 
     function pdfIndir() {
-        const element = document.getElementById('pdf-content');
-        const isim = document.getElementById('isim').value || "Fidas_Rapor";
+        const element = document.getElementById('pdf-capture');
+        const isim = document.getElementById('isim').value || "Fidas";
         
-        // PDF Çıktısı için ayarlar optimize edildi
+        // PDF sorununu çözen kritik ayarlar
         const opt = {
-            margin:       [10, 10, 10, 10],
+            margin:       10,
             filename:     `${isim}_Finansal_Rapor.pdf`,
-            image:        { type: 'jpeg', quality: 0.98 },
+            image:        { type: 'jpeg', quality: 1 },
             html2canvas:  { 
-                scale: 2, 
-                useCORS: true, 
-                backgroundColor: '#0f172a' // Arka plan rengini korumak için
+                scale: 3, // Çözünürlüğü artırır
+                useCORS: true,
+                letterRendering: true,
+                scrollY: 0, // Kayma sorununu önler
+                backgroundColor: '#0f172a' 
             },
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
 
-        html2pdf().set(opt).from(element).save();
+        // Render işlemi
+        html2pdf().from(element).set(opt).save();
     }
 </script>
 </body>
