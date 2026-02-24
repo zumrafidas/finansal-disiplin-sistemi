@@ -1,138 +1,131 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
-<meta charset="UTF-8">
-<title>FİDAS - Finansal Disiplin Sistemi</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-body {
-    font-family: Arial;
-    text-align: center;
-    padding: 30px;
-    background-color: #f4f6f9;
-}
-
-h1 {
-    margin-bottom: 20px;
-}
-
-input {
-    padding: 10px;
-    margin: 10px;
-    width: 250px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-}
-
-button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-.bar-container {
-    width: 300px;
-    height: 25px;
-    background-color: #ddd;
-    margin: 20px auto;
-    border-radius: 15px;
-    overflow: hidden;
-}
-
-.bar {
-    height: 100%;
-    width: 0%;
-    transition: 0.5s;
-}
-
-#profil {
-    margin-top: 15px;
-    font-size: 18px;
-    font-weight: bold;
-}
-</style>
+    <meta charset="UTF-8">
+    <title>FİDAS v2.0 - Matematiksel Finansal Analiz</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+            --bg: #f8fafc;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); color: #1e293b; padding: 20px; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        h1 { font-size: 24px; color: var(--primary); margin-bottom: 5px; }
+        p.subtitle { font-size: 14px; color: #64748b; margin-bottom: 25px; }
+        .input-group { text-align: left; margin-bottom: 15px; }
+        label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; color: #475569; }
+        input { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; box-sizing: border-box; transition: 0.3s; font-size: 16px; }
+        input:focus { border-color: var(--primary); outline: none; }
+        button { width: 100%; padding: 15px; border: none; border-radius: 10px; background-color: var(--primary); color: white; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        button:hover { background-color: #1d4ed8; transform: translateY(-2px); }
+        .result-card { margin-top: 25px; padding: 20px; border-radius: 15px; background: #f1f5f9; display: none; }
+        .bar-container { width: 100%; height: 12px; background-color: #e2e8f0; border-radius: 10px; margin: 15px 0; overflow: hidden; }
+        .bar { height: 100%; width: 0%; transition: 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        #tahmin { font-size: 13px; color: #64748b; margin-top: 10px; border-top: 1px dashed #cbd5e1; padding-top: 10px; }
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 10px; }
+    </style>
 </head>
-
 <body>
 
-<h1>FİDAS - Finansal Disiplin Sistemi</h1>
+<div class="container">
+    <h1>FİDAS <small style="font-size: 12px; vertical-align: middle; opacity: 0.7;">v2.0</small></h1>
+    <p class="subtitle">Gençler İçin Finansal Davranış Analiz Sistemi</p>
 
-<input type="number" id="gelir" placeholder="Aylık Gelir (₺)">
-<br>
-<input type="number" id="gider" placeholder="Aylık Gider (₺)">
-<br>
-<input type="number" id="plansiz" placeholder="Plansız Harcama Sayısı">
-<br>
+    <div class="input-group">
+        <label>Aylık Toplam Gelir (₺)</label>
+        <input type="number" id="gelir" placeholder="Örn: 2000">
+    </div>
+    <div class="input-group">
+        <label>Aylık Zorunlu Giderler (₺)</label>
+        <input type="number" id="gider" placeholder="Örn: 1200">
+    </div>
+    <div class="input-group">
+        <label>Ay İçindeki Plansız Harcama Sayısı</label>
+        <input type="number" id="plansiz" placeholder="Örn: 3">
+    </div>
 
-<button onclick="hesapla()">Skoru Hesapla</button>
+    <button onclick="analizEt()">Matematiksel Analizi Başlat</button>
 
-<h2 id="sonuc"></h2>
+    <div id="resultCard" class="result-card">
+        <div id="badge" class="badge"></div>
+        <div style="font-size: 14px; font-weight: 600;">Finansal Disiplin Skoru</div>
+        <div id="skorDeger" style="font-size: 32px; font-weight: 800; margin: 5px 0;"></div>
+        
+        <div class="bar-container">
+            <div id="skorBar" class="bar"></div>
+        </div>
 
-<div class="bar-container">
-    <div id="skorBar" class="bar"></div>
+        <div id="yorum" style="font-size: 14px; line-height: 1.5;"></div>
+        <div id="tahmin"></div>
+    </div>
 </div>
 
-<div id="yorum"></div>
-<div id="profil"></div>
-
 <script>
-function hesapla() {
+function analizEt() {
+    const gelir = parseFloat(document.getElementById("gelir").value);
+    const gider = parseFloat(document.getElementById("gider").value);
+    const plansiz = parseFloat(document.getElementById("plansiz").value);
 
-let gelir = parseFloat(document.getElementById("gelir").value);
-let gider = parseFloat(document.getElementById("gider").value);
-let plansiz = parseFloat(document.getElementById("plansiz").value);
+    if (!gelir || isNaN(gider)) {
+        alert("Lütfen geçerli değerler giriniz.");
+        return;
+    }
 
-if (!gelir || !gider) {
-    alert("Lütfen tüm alanları doldurun.");
-    return;
-}
+    // --- MATEMATİKSEL MODELLEME (9. SINIF SEVİYESİ) ---
+    
+    // 1. Oran-Orantı: Tasarruf Oranı
+    let tasarruf = gelir - gider;
+    let tasarrufOrani = tasarruf / gelir; // r değeri
 
-let tasarruf = gelir - gider;
-let oran = tasarruf / gelir;
+    // 2. Ağırlıklı Ortalama Modeli (W_score)
+    // Katsayılar: Tasarruf %60, Plansız Harcama Disiplini %40 etkili
+    let tasarrufPuani = (tasarrufOrani * 100) * 0.6;
+    let disiplinPuani = (100 - (plansiz * 10)) * 0.4;
+    
+    let hamSkor = tasarrufPuani + disiplinPuani;
 
-let skor = 50;
+    // 3. Eşik Değer Kontrolü (Sınırlandırma)
+    let finalSkor = Math.max(0, Math.min(100, Math.round(hamSkor)));
 
-if (oran > 0.3) {
-    skor += 30;
-} else if (oran > 0.1) {
-    skor += 15;
-}
+    // Sonuç Ekranını Göster
+    document.getElementById("resultCard").style.display = "block";
+    document.getElementById("skorDeger").innerText = "%" + finalSkor;
+    
+    const bar = document.getElementById("skorBar");
+    const badge = document.getElementById("badge");
+    const yorum = document.getElementById("yorum");
+    const tahmin = document.getElementById("tahmin");
+    
+    bar.style.width = finalSkor + "%";
 
-skor -= plansiz * 5;
+    // Mantıksal Karar Yapısı
+    if (finalSkor < 40) {
+        bar.style.backgroundColor = "var(--danger)";
+        badge.style.backgroundColor = "#fee2e2";
+        badge.style.color = "var(--danger)";
+        badge.innerText = "RİSKLİ";
+        yorum.innerHTML = "<b>Analiz:</b> Harcama hızınız gelirinizin çok üzerinde. Acilen 'İstek/İhtiyaç' ayrımı yapmalısınız.";
+    } else if (finalSkor < 75) {
+        bar.style.backgroundColor = "var(--warning)";
+        badge.style.backgroundColor = "#fef3c7";
+        badge.style.color = "var(--warning)";
+        badge.innerText = "GELİŞTİRİLEBİLİR";
+        yorum.innerHTML = "<b>Analiz:</b> Dengeli bir bütçeniz var ancak plansız harcamalar birikim yapmanızı engelliyor.";
+    } else {
+        bar.style.backgroundColor = "var(--success)";
+        badge.style.backgroundColor = "#d1fae5";
+        badge.style.color = "var(--success)";
+        badge.innerText = "MÜKEMMEL";
+        yorum.innerHTML = "<b>Analiz:</b> Güçlü finansal disiplin! Matematiksel olarak güvenli bölgedesiniz.";
+    }
 
-if (skor > 100) skor = 100;
-if (skor < 0) skor = 0;
-
-document.getElementById("sonuc").innerHTML = "Toplam Skor: " + skor + "/100";
-
-let bar = document.getElementById("skorBar");
-bar.style.width = skor + "%";
-
-if (skor < 40) {
-    bar.style.backgroundColor = "red";
-    document.getElementById("yorum").innerHTML = "❗ Riskli Finansal Davranış";
-    document.getElementById("profil").innerHTML = "Profil: Harcama Kontrolü Zayıf";
-}
-else if (skor < 70) {
-    bar.style.backgroundColor = "orange";
-    document.getElementById("yorum").innerHTML = "⚠ Orta Seviye Finansal Disiplin";
-    document.getElementById("profil").innerHTML = "Profil: Dengeli Ama Geliştirilebilir";
-}
-else {
-    bar.style.backgroundColor = "green";
-    document.getElementById("yorum").innerHTML = "✅ Güçlü Finansal Disiplin";
-    document.getElementById("profil").innerHTML = "Profil: Tasarrufçu ve Kontrollü";
-}
-
+    // 4. Doğrusal Fonksiyon ile Gelecek Tahmini: f(x) = tasarruf * x
+    let birYilSonra = tasarruf * 12;
+    tahmin.innerHTML = `<b>📊 12 Aylık Projeksiyon:</b> Bu disiplinle devam ederseniz, 1 yıl sonunda toplam birikiminiz: <b>${birYilSonra.toLocaleString()} ₺</b> olacaktır.`;
 }
 </script>
 
