@@ -4,40 +4,108 @@
     <title>FİDAS - Finansal Disiplin Skoru</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: Arial; text-align:center; padding:20px; }
-        input { margin:10px; padding:8px; width:200px; }
-        button { padding:10px 20px; }
+        body { 
+            font-family: Arial; 
+            text-align:center; 
+            padding:20px; 
+            background-color:#f4f6f9;
+        }
+        input { 
+            margin:10px; 
+            padding:10px; 
+            width:220px; 
+            border-radius:8px;
+            border:1px solid #ccc;
+        }
+        button { 
+            padding:12px 25px; 
+            border:none;
+            border-radius:8px;
+            font-weight:bold;
+            cursor:pointer;
+        }
+        h2 { color:#2c3e50; }
+        #sonuc { margin-top:20px; font-size:18px; font-weight:bold; }
     </style>
 </head>
 <body>
 
-<h2>Finansal Disiplin Skoru</h2>
+<h2>Finansal Disiplin Skoru (FİDAS)</h2>
 
 <input type="number" id="gelir" placeholder="Aylık Gelir (TL)">
 <br>
+
 <input type="number" id="gider" placeholder="Aylık Gider (TL)">
 <br>
+
+<input type="number" id="plansiz" placeholder="Plansız Harcama Sayısı">
+<br>
+
 <button onclick="hesapla()">Skoru Hesapla</button>
 
 <h3 id="sonuc"></h3>
 
 <script>
 function hesapla() {
-    var gelir = document.getElementById("gelir").value;
-    var gider = document.getElementById("gider").value;
 
-    var tasarruf = gelir - gider;
-    var oran = tasarruf / gelir;
+    var gelir = parseFloat(document.getElementById("gelir").value);
+    var gider = parseFloat(document.getElementById("gider").value);
+    var plansiz = parseFloat(document.getElementById("plansiz").value);
 
-    var skor = oran * 100;
-
-    if (skor < 20) {
-        document.getElementById("sonuc").innerHTML = 
-        "Riskli Bölge! Skor: " + skor.toFixed(0);
-    } else {
-        document.getElementById("sonuc").innerHTML = 
-        "İyi Durum! Skor: " + skor.toFixed(0);
+    if (!gelir || !gider) {
+        document.getElementById("sonuc").innerHTML = "Lütfen tüm alanları doldurun.";
+        return;
     }
+
+    // 1️⃣ Tasarruf Skoru (40 puan)
+    var tasarrufOrani = (gelir - gider) / gelir;
+    var tasarrufSkor = 0;
+
+    if (tasarrufOrani >= 0.20) {
+        tasarrufSkor = 40;
+    } else if (tasarrufOrani > 0) {
+        tasarrufSkor = tasarrufOrani * 200; 
+    } else {
+        tasarrufSkor = 0;
+    }
+
+    // 2️⃣ Risk Skoru (30 puan)
+    var giderOrani = gider / gelir;
+    var riskSkor = 0;
+
+    if (giderOrani < 0.50) {
+        riskSkor = 30;
+    } else if (giderOrani < 0.80) {
+        riskSkor = 15;
+    } else {
+        riskSkor = 0;
+    }
+
+    // 3️⃣ Harcama Kontrol Skoru (30 puan)
+    var kontrolSkor = 0;
+
+    if (plansiz <= 2) {
+        kontrolSkor = 30;
+    } else if (plansiz <= 5) {
+        kontrolSkor = 15;
+    } else {
+        kontrolSkor = 0;
+    }
+
+    var toplamSkor = tasarrufSkor + riskSkor + kontrolSkor;
+
+    var durum = "";
+
+    if (toplamSkor >= 70) {
+        durum = "Finansal Disiplinin Çok İyi 👍";
+    } else if (toplamSkor >= 40) {
+        durum = "Orta Seviye ⚠️";
+    } else {
+        durum = "Riskli Finansal Davranış ❗";
+    }
+
+    document.getElementById("sonuc").innerHTML =
+        "Toplam Skor: " + toplamSkor.toFixed(0) + "/100 <br>" + durum;
 }
 </script>
 
