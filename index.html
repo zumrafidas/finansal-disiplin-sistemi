@@ -2,131 +2,136 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>FİDAS ULTIMATE - Finansal Zeka Sistemi</title>
+    <title>FİDAS - Kişiselleştirilmiş Finansal Zeka</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        :root { --p:#818cf8; --s:#34d399; --d:#fb7185; --w:#fbbf24; --bg:#020617; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: white; display: flex; justify-content: center; padding: 20px; }
-        .card { background: #0f172a; padding: 30px; border-radius: 32px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); width: 100%; max-width: 480px; border: 1px solid #1e293b; text-align: center; }
-        h1 { font-size: 32px; background: linear-gradient(to right, #818cf8, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; font-weight: 800; }
-        .subtitle { color:#64748b; font-size: 14px; margin-bottom: 25px; }
-        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .input-box { text-align: left; }
-        .full-width { grid-column: span 2; }
+        :root { --p:#818cf8; --s:#34d399; --d:#fb7185; --bg:#020617; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        
+        .card { background: #0f172a; padding: 35px; border-radius: 32px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); width: 100%; max-width: 480px; border: 1px solid #1e293b; text-align: center; }
+        
+        /* Ekran Geçişleri */
+        #welcome-screen { display: block; }
+        #app-screen { display: none; }
+        
+        .logo-icon { width: 70px; height: 70px; background: linear-gradient(135deg, var(--p), var(--s)); border-radius: 20px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 35px; }
+        
+        h1 { font-size: 30px; background: linear-gradient(to right, #818cf8, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; font-weight: 800; }
+        .description { color:#94a3b8; line-height: 1.6; margin: 20px 0; font-size: 15px; text-align: left; }
+        
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; text-align: left; }
         label { display: block; font-size: 11px; font-weight: 700; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase; }
-        input { width: 100%; background: #1e293b; border: 1px solid #334155; padding: 14px; border-radius: 16px; color: white; font-size: 16px; box-sizing: border-box; transition: 0.3s; }
-        input:focus { border-color: var(--p); outline: none; background: #1e293b; box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.2); }
-        button { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--p), #6366f1); border: none; border-radius: 16px; color: white; font-weight: 800; cursor: pointer; transition: 0.4s; margin-top: 10px; font-size: 16px; }
-        button:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4); }
-        .stats { margin-top: 30px; display: none; animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        input { width: 100%; background: #1e293b; border: 1px solid #334155; padding: 14px; border-radius: 16px; color: white; font-size: 16px; box-sizing: border-box; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--p); box-shadow: 0 0 10px rgba(129, 140, 248, 0.2); }
+        
+        button { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--p), #6366f1); border: none; border-radius: 16px; color: white; font-weight: 800; cursor: pointer; transition: 0.3s; font-size: 16px; margin-top: 10px; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3); }
+
+        .results { margin-top: 25px; animation: slideUp 0.5s ease; border-top: 1px solid #334155; padding-top: 20px; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
         .score-box { background: #1e293b; padding: 20px; border-radius: 24px; margin-bottom: 20px; border: 1px solid #334155; }
-        .fin-age-badge { background: rgba(52, 211, 153, 0.1); color: var(--s); padding: 6px 16px; border-radius: 100px; font-size: 12px; font-weight: 700; display: inline-block; margin-bottom: 10px; border: 1px solid rgba(52, 211, 153, 0.2); }
         .insight-card { background: rgba(30, 41, 59, 0.5); padding: 18px; border-radius: 20px; font-size: 14px; text-align: left; margin-bottom: 15px; border-left: 4px solid var(--p); line-height: 1.6; }
-        .warning { border-left-color: var(--d); }
-        .success { border-left-color: var(--s); }
-        .mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .mini-box { background: #0f172a; padding: 10px; border-radius: 12px; font-size: 11px; color: #94a3b8; }
-        .mini-box b { display: block; color: white; font-size: 14px; margin-top: 4px; }
+        .user-name { color: var(--s); font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h1>FİDAS ULTIMATE</h1>
-    <p class="subtitle">9. Sınıf Matematiksel Modelleme Projesi</p>
-
-    <div class="input-grid">
-        <div class="input-box">
-            <label>Yaş</label>
-            <input type="number" id="yas" placeholder="15">
-        </div>
-        <div class="input-box">
-            <label>Gelir (₺)</label>
-            <input type="number" id="gelir" placeholder="0">
-        </div>
-        <div class="input-box full-width">
-            <label>Zorunlu Giderler (₺)</label>
-            <input type="number" id="gider" placeholder="Kira, fatura, ulaşım...">
-        </div>
-        <div class="input-box full-width">
-            <label>İstekler / Plansız (₺)</label>
-            <input type="number" id="plansiz" placeholder="Kahve, oyun, kıyafet...">
-        </div>
+    <div id="welcome-screen">
+        <div class="logo-icon">🚀</div>
+        <h1>FİDAS'A HOŞ GELDİN</h1>
+        <p class="description">
+            <b>Finansal Disiplin Analiz Sistemi</b>, bütçeni 9. sınıf matematik müfredatındaki oran, orantı ve veri analizi yöntemleriyle denetler. <br><br>
+            Sadece harcamalarını takip etmez, sana özel <b>Finansal Yaş</b> ve <b>Disiplin Skoru</b> üreterek geleceğini planlar.
+        </p>
+        <button onclick="baslat()">SİSTEMİ BAŞLAT</button>
     </div>
 
-    <button onclick="ultimateAnaliz()">ALGORİTMAYI ÇALIŞTIR</button>
-
-    <div id="stats" class="stats">
-        <div class="score-box">
-            <div id="finAgeBadge" class="fin-age-badge">FİNANSAL YAŞ: --</div>
-            <div style="font-size: 11px; color: #94a3b8; margin-bottom: 5px;">DİSİPLİN SKORU</div>
-            <div id="skorDeger" style="font-size: 48px; font-weight: 900; color: white;">%0</div>
+    <div id="app-screen">
+        <h1>ANALİZ MERKEZİ</h1>
+        <p style="color:#64748b; font-size: 12px; margin-bottom: 20px;">Lütfen güncel verilerinizi girin</p>
+        
+        <div class="input-grid">
+            <div style="grid-column: span 2;">
+                <label>Adınız</label>
+                <input type="text" id="isimInput" placeholder="İsminizi buraya yazın...">
+            </div>
+            <div>
+                <label>Yaş</label>
+                <input type="number" id="yasInput" placeholder="15">
+            </div>
+            <div>
+                <label>Aylık Gelir (₺)</label>
+                <input type="number" id="gelirInput" placeholder="0">
+            </div>
+            <div style="grid-column: span 2;">
+                <label>Sabit Giderler (₺)</label>
+                <input type="number" id="giderInput" placeholder="Kira, fatura, ulaşım...">
+            </div>
+            <div style="grid-column: span 2;">
+                <label>İstekler / Plansız (₺)</label>
+                <input type="number" id="plansizInput" placeholder="Keyfi harcamalar...">
+            </div>
         </div>
 
-        <div id="analiz1" class="insight-card"></div>
-        <div id="analiz2" class="insight-card success"></div>
-        
-        <div class="mini-grid">
-            <div class="mini-box">Yıllık Reel Birikim <b id="reelPara">0 ₺</b></div>
-            <div class="mini-box">Emeğinizin Karşılığı <b id="calismaSaati">0 Saat</b></div>
+        <button onclick="analizEt()">HESAPLAMAYI YAP</button>
+
+        <div id="sonuclar" class="results" style="display:none;">
+            <div class="score-box">
+                <div id="ozelMesaj" style="margin-bottom: 10px; font-size: 15px;"></div>
+                <div id="skorGoster" style="font-size: 45px; font-weight: 900; color: var(--s);">%0</div>
+                <div style="font-size: 11px; color:#94a3b8; letter-spacing: 2px;">DİSİPLİN PUANI</div>
+            </div>
+            <div id="detayAnaliz" class="insight-card"></div>
         </div>
     </div>
 </div>
 
 <script>
-function ultimateAnaliz() {
-    const yas = parseInt(document.getElementById("yas").value);
-    const gel = parseFloat(document.getElementById("gelir").value);
-    const zor = parseFloat(document.getElementById("gider").value);
-    const plan = parseFloat(document.getElementById("plansiz").value);
+    function baslat() {
+        document.getElementById('welcome-screen').style.display = 'none';
+        document.getElementById('app-screen').style.display = 'block';
+    }
 
-    if (isNaN(yas) || isNaN(gel) || isNaN(zor) || isNaN(plan)) return alert("Lütfen verileri girin!");
+    function analizEt() {
+        const isim = document.getElementById('isimInput').value || "Kullanıcı";
+        const yas = parseInt(document.getElementById('yasInput').value);
+        const gel = parseFloat(document.getElementById('gelirInput').value);
+        const zor = parseFloat(document.getElementById('giderInput').value);
+        const plan = parseFloat(document.getElementById('plansizInput').value);
 
-    const toplamGider = zor + plan;
-    const tasarruf = gel - toplamGider;
-    
-    // 1. MATEMATİKSEL SKORLAMA (Ağırlıklı Algoritma)
-    let tasarrufOrani = tasarruf / gel;
-    let istekOrani = plan / gel;
-    
-    // 9. Sınıf Mantığı: Yaş faktörüyle çarpan etkisi oluşturma
-    let yasCarpani = Math.sqrt(yas / 15); 
-    let hamSkor = (tasarrufOrani * 70) + (30 - (istekOrani * 50 * yasCarpani));
-    let finalSkor = Math.max(0, Math.min(100, Math.round(hamSkor)));
+        if (!yas || !gel) return alert("Lütfen bilgileri eksiksiz doldurun!");
 
-    // 2. FİNANSAL YAŞ HESABI
-    let fYas = finalSkor > 80 ? yas + 10 : (finalSkor < 40 ? Math.max(7, yas - 8) : yas);
+        const toplamGider = zor + plan;
+        const tasarruf = gel - toplamGider;
+        const tasarrufOrani = (tasarruf / gel) * 100;
+        
+        // Matematiksel Model (Ağırlıklı Ortalama)
+        let skor = Math.round((tasarrufOrani * 0.7) + (1 - (plan / gel)) * 30);
+        let finalSkor = Math.max(0, Math.min(100, skor));
 
-    // 3. 50-30-20 KURALI DENETÇİSİ
-    let denetim = "";
-    if (istekOrani > 0.3) denetim = `⚠️ <b>Bütçe Hatası:</b> 'İstek' harcamaların bütçenin %30'unu aşmış. Matematiksel olarak bu durum 'Finansal Kayıp' bölgesidir.`;
-    else denetim = `✅ <b>İdeal Bütçe:</b> 50-30-20 kuralına uyuyorsun. Harcama dağılımın matematiksel olarak dengeli.`;
+        // Ekranı Güncelle
+        document.getElementById('sonuclar').style.display = 'block';
+        document.getElementById('skorGoster').innerText = "%" + finalSkor;
+        document.getElementById('ozelMesaj').innerHTML = `Merhaba <span class="user-name">${isim}</span>,`;
 
-    // 4. ENFLASYON VE REEL DEĞER (Yıllık %50 enflasyon varsayımı)
-    let nominalYilSonu = tasarruf * 12;
-    let reelYilSonu = nominalYilSonu / 1.5; 
+        // Kişiye Özel Dinamik Yorum
+        let yorum = "";
+        if(finalSkor > 75) {
+            yorum = `Bütçe yönetimin harika! Matematiksel modelin, finansal kararlarının çok tutarlı olduğunu gösteriyor.`;
+        } else if(finalSkor > 45) {
+            yorum = `Fena değilsin ama özellikle plansız harcamaların bütçende gedikler açıyor. Biraz daha matematiksel disiplinle skoru yükseltebilirsin.`;
+        } else {
+            yorum = `Dikkat! Harcamaların gelirinle orantısız görünüyor. Acilen bir tasarruf planına geçmelisin.`;
+        }
 
-    // GÖRSEL GÜNCELLEME
-    document.getElementById("stats").style.display = "block";
-    document.getElementById("skorDeger").innerText = "%" + finalSkor;
-    document.getElementById("finAgeBadge").innerText = "FİNANSAL YAŞ: " + fYas;
-    
-    document.getElementById("analiz1").innerHTML = `👤 <b>Davranış Analizi:</b> Alışkanlıkların seni <b>${fYas}</b> yaşında birinin olgunluğunda gösteriyor. ${denetim}`;
-    
-    document.getElementById("analiz2").innerHTML = `🚀 <b>Strateji:</b> Plansız harcamalarını %25 azaltırsan, yıl sonunda fazladan <b>${(plan * 0.25 * 12).toLocaleString()} ₺</b> daha biriktirebilirsin.`;
-    
-    document.getElementById("reelPara").innerText = Math.round(reelYilSonu).toLocaleString() + " ₺";
-    document.getElementById("calismaSaati").innerText = Math.round(plan / 100) + " Saat";
-
-    // Renk Kontrolü
-    const sBox = document.querySelector(".score-box");
-    if(finalSkor < 40) sBox.style.borderTop = "4px solid var(--d)";
-    else if(finalSkor < 75) sBox.style.borderTop = "4px solid var(--w)";
-    else sBox.style.borderTop = "4px solid var(--s)";
-}
+        document.getElementById('detayAnaliz').innerHTML = `
+            ${yorum} <br><br>
+            📉 <b>Veri Analizi:</b> Gelirinin %${((plan/gel)*100).toFixed(1)}'ini plansız harcamalara ayırıyorsun. Bu oran ideal olan %20'nin üzerinde.
+        `;
+    }
 </script>
 
 </body>
 </html>
-  
