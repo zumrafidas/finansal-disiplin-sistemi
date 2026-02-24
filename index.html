@@ -2,46 +2,39 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>MatFin - Kişisel Finans Koçunuz</title>
+    <title>MatFin - Dijital Finans Koçu</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root { --p:#6366f1; --s:#10b981; --d:#f43f5e; --bg:#020617; --card:#0f172a; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: white; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .card { background: var(--card); padding: 40px; border-radius: 35px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6); width: 100%; max-width: 500px; border: 1px solid #1e293b; position: relative; overflow: hidden; }
+        .card { background: var(--card); padding: 40px; border-radius: 35px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6); width: 100%; max-width: 500px; border: 1px solid #1e293b; text-align: center; }
         
         /* Modern Hesap Kalkanı Logosu */
-        .shield-logo { width: 80px; height: 80px; background: linear-gradient(135deg, var(--p), var(--s)); border-radius: 22px; margin: 0 auto 25px; display: flex; align-items: center; justify-content: center; position: relative; box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4); }
+        .shield-logo { width: 80px; height: 80px; background: linear-gradient(135deg, var(--p), var(--s)); border-radius: 22px; margin: 0 auto 25px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4); }
         .shield-logo::after { content: "🛡️"; font-size: 40px; }
 
         h1 { font-size: 32px; background: linear-gradient(to right, #818cf8, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; font-weight: 850; letter-spacing: -1px; }
         
-        /* Giriş Ekranı Adımları */
         .step-container { display: flex; justify-content: space-between; margin: 30px 0; text-align: center; }
         .step { flex: 1; font-size: 11px; color: #64748b; }
         .step-icon { width: 35px; height: 35px; background: #1e293b; border-radius: 10px; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; border: 1px solid #334155; }
 
         .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 25px; text-align: left; }
-        label { display: block; font-size: 11px; font-weight: 700; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-        input { width: 100%; background: #1e293b; border: 1px solid #334155; padding: 14px; border-radius: 15px; color: white; font-size: 16px; outline: none; transition: 0.3s; box-sizing: border-box; }
-        input:focus { border-color: var(--p); box-shadow: 0 0 15px rgba(99, 102, 241, 0.2); }
-
+        label { display: block; font-size: 11px; font-weight: 700; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase; }
+        input { width: 100%; background: #1e293b; border: 1px solid #334155; padding: 14px; border-radius: 15px; color: white; font-size: 16px; outline: none; box-sizing: border-box; }
+        
         .btn { width: 100%; padding: 18px; border: none; border-radius: 18px; color: white; font-weight: 800; cursor: pointer; margin-top: 20px; transition: 0.3s; font-size: 16px; }
         .btn-primary { background: linear-gradient(135deg, var(--p), #4f46e5); box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4); }
-        .btn-secondary { background: #1e293b; border: 1px solid #334155; color: #94a3b8; }
-        .btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
+        
+        .results { display: none; margin-top: 30px; border-top: 2px solid #1e293b; padding-top: 25px; }
 
-        .results { display: none; margin-top: 30px; border-top: 2px solid #1e293b; padding-top: 25px; animation: fadeIn 0.6s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* Analiz Kartları */
         .coach-section { background: rgba(99, 102, 241, 0.1); border: 1px dashed var(--p); border-radius: 20px; padding: 20px; margin-top: 20px; text-align: left; }
         .coach-header { font-weight: 800; color: var(--p); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
         .insight-text { font-size: 14px; line-height: 1.6; color: #cbd5e1; }
         .math-tip { margin-top: 15px; font-size: 12px; color: var(--s); font-style: italic; background: rgba(16, 185, 129, 0.1); padding: 10px; border-radius: 10px; }
 
-        .score-display { font-size: 48px; font-weight: 900; color: var(--s); margin: 10px 0; }
+        .score-display { font-size: 52px; font-weight: 900; color: var(--s); margin: 10px 0; }
         .chart-box { width: 100%; max-width: 240px; margin: 20px auto; }
     </style>
 </head>
@@ -51,43 +44,41 @@
     <div id="welcome-screen">
         <div class="shield-logo"></div>
         <h1>MATFİN</h1>
-        <p style="color:#94a3b8; font-size: 15px; margin-top: 10px;">9. Sınıf Matematik Müfredatı ile <br>Finansal Check-up Merkezi</p>
+        <p style="color:#94a3b8; font-size: 15px; margin-top: 10px;">9. Sınıf Matematik Müfredatı Odaklı <br>Kişisel Bütçe Analizi</p>
         
         <div class="step-container">
             <div class="step"><div class="step-icon">📝</div>Veri Gir</div>
             <div class="step"><div class="step-icon">⚙️</div>Analiz Et</div>
-            <div class="step"><div class="step-icon">📋</div>Rapor Al</div>
+            <div class="step"><div class="step-icon">📊</div>Sonuç Al</div>
         </div>
-
-        <button class="btn btn-primary" onclick="baslat()">ANALİZİ BAŞLAT</button>
+        <button class="btn btn-primary" onclick="baslat()">SİSTEMİ BAŞLAT</button>
     </div>
 
     <div id="app-screen" style="display:none;">
-        <h1>ANALİZ PANELİ</h1>
+        <h1>GİRİŞ PANELİ</h1>
         <div class="input-grid">
-            <div style="grid-column: span 2;"><label>Adınız</label><input type="text" id="isim" placeholder="Adınızı buraya yazın..."></div>
+            <div style="grid-column: span 2;"><label>Adınız</label><input type="text" id="isim" placeholder="Örn: Zümra"></div>
             <div><label>Gelir (₺)</label><input type="number" id="gelir"></div>
             <div><label>Yaş</label><input type="number" id="yas"></div>
-            <div style="grid-column: span 2;"><label>Sabit Giderler (₺)</label><input type="number" id="gider"></div>
-            <div style="grid-column: span 2;"><label>Plansız Harcamalar (₺)</label><input type="number" id="plansiz"></div>
+            <div style="grid-column: span 2;"><label>Giderler (₺)</label><input type="number" id="gider"></div>
+            <div style="grid-column: span 2;"><label>Dürtüsel Harcama (₺)</label><input type="number" id="plansiz"></div>
         </div>
-        <button class="btn btn-primary" onclick="hesapla()">HESAPLA VE YORUMLA</button>
+        <button class="btn btn-primary" onclick="hesapla()">MATEMATİKSEL ANALİZ YAP</button>
 
         <div id="sonuclar" class="results">
-            <div id="pdf-area">
-                <div id="hitap" style="font-weight: 800; font-size: 18px; color: var(--p);"></div>
-                <div class="score-display" id="skorDeger">%0</div>
-                <p style="color:#64748b; font-size: 11px; letter-spacing: 2px; margin-bottom: 20px;">GENEL DİSİPLİN SKORU</p>
+            <div id="hitap" style="font-weight: 800; font-size: 18px; color: var(--p);"></div>
+            <div class="score-display" id="skorDeger">%0</div>
+            <p style="color:#64748b; font-size: 11px; letter-spacing: 2px;">DİSİPLİN PUANI</p>
 
-                <div class="chart-box"><canvas id="butceGrafik"></canvas></div>
+            <div class="chart-box"><canvas id="butceGrafik"></canvas></div>
 
-                <div class="coach-section">
-                    <div class="coach-header" id="coach-title">🚀 Finans Koçu</div>
-                    <div id="analizYorum" class="insight-text"></div>
-                    <div id="mat-tip" class="math-tip"></div>
-                </div>
+            <div class="coach-section">
+                <div class="coach-header" id="coach-title">🚀 Finans Koçu</div>
+                <div id="analizYorum" class="insight-text"></div>
+                <div id="mat-tip" class="math-tip"></div>
             </div>
-            <button class="btn btn-secondary" onclick="pdfIndir()">📥 DETAYLI RAPORU İNDİR (PDF)</button>
+            
+            <p style="margin-top:20px; font-size:11px; color:#475569;">* Analiz sonuçları matematiksel oran-orantı modeline dayanmaktadır.</p>
         </div>
     </div>
 </div>
@@ -115,46 +106,33 @@
         document.getElementById('hitap').innerText = `Merhaba ${isim},`;
         document.getElementById('coach-title').innerText = `🚀 ${isim}'in Finans Koçu`;
 
-        // Detaylı Analiz Mantığı
         let yorum = "";
         let matIpucu = "";
 
         if(finalSkor > 75) {
-            yorum = `Mükemmel bir denge! Matematiksel modelin, finansal kararlarının çok tutarlı olduğunu gösteriyor. Gelirinin %${tOran.toFixed(1)}'ini tasarrufa dönüştürmen harika bir oran.`;
-            matIpucu = "Matematiksel İpucu: Bu tasarruf hızıyla, bileşik faiz etkisiyle birikimlerin üstel bir fonksiyon (exponential) olarak artacaktır.";
-        } else if(finalSkor > 45) {
-            yorum = `Bütçen güvenli bölgede ancak sızıntılar var. Plansız harcamaların (%${pOran.toFixed(1)}) bütçende gedikler açıyor. Bu oran ideal olan %15'in üzerinde.`;
-            matIpucu = "Matematiksel İpucu: Harcamalarını %5 oranında azaltsan bile, tasarruf miktarında doğrusal bir artış gözlemleyeceksin.";
+            yorum = `Müthiş bir disiplin! Gelirinin %${tOran.toFixed(1)}'ini tasarrufa dönüştürmen, matematiksel modelimizde 'Güvenli Bölge'desin demek. Plansız harcamaların çok düşük.`;
+            matIpucu = "Matematiksel Tavsiye: Birikimlerin aritmetik değil, düzenli yatırım ile geometrik bir dizi şeklinde büyüme potansiyeli taşıyor.";
+        } else if(finalSkor > 40) {
+            yorum = `Orta düzey disiplin. Dürtüsel harcamaların (%${pOran.toFixed(1)}) bütçende sızıntı yapıyor. Bu oran %15 kritik sınırını geçmemeli.`;
+            matIpucu = "Matematiksel Tavsiye: Gider-gelir oranını %10 iyileştirmen, disiplin skorunu doğrudan 15 puan yukarı taşıyacaktır.";
         } else {
-            yorum = `Dikkat! Harcamaların gelirinle orantısız görünüyor. Mevcut tabloya göre 9. sınıf oran-orantı mantığıyla, giderlerin geliri yutmak üzere.`;
-            matIpucu = "Matematiksel İpucu: Acilen plansız giderleri kısıp tasarruf değişkenini pozitif hale getirmelisin.";
+            yorum = `Bütçen alarm veriyor! Harcamaların gelirinle orantısız bir küme oluşturuyor. 9. Sınıf oran-orantı mantığına göre borçlanma riskin yüksek.`;
+            matIpucu = "Matematiksel Tavsiye: Tasarruf değişkenini (x) sıfırın üzerine çıkarmak için plansız harcamalarını acilen durdurmalısın.";
         }
 
         document.getElementById('analizYorum').innerText = yorum;
         document.getElementById('mat-tip').innerText = matIpucu;
 
-        // Grafik
         const ctx = document.getElementById('butceGrafik').getContext('2d');
         if (window.myChart) window.myChart.destroy();
         window.myChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['Sabit', 'İstekler', 'Tasarruf'],
+                labels: ['Sabit', 'Plansız', 'Tasarruf'],
                 datasets: [{ data: [zor, plan, tasarruf], backgroundColor: ['#6366f1', '#f43f5e', '#10b981'], borderWidth: 0 }]
             },
-            options: { animation: false, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } } }
+            options: { animation: { duration: 1000 }, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } } }
         });
-    }
-
-    function pdfIndir() {
-        const element = document.getElementById('pdf-area');
-        const isim = document.getElementById('isim').value || "Matfin";
-        html2pdf().from(element).set({
-            margin: 10,
-            filename: `${isim}_Matfin_Rapor.pdf`,
-            html2canvas: { scale: 3, backgroundColor: '#0f172a' },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        }).save();
     }
 </script>
 </body>
