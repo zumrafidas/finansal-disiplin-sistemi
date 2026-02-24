@@ -1,141 +1,140 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Finansal Disiplin Skoru (FİDAS)</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>FİDAS - Finansal Disiplin Sistemi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        body {
-            font-family: Arial;
-            text-align: center;
-            padding: 30px;
-            background-color: #f4f6f9;
-        }
+<style>
+body {
+    font-family: Arial;
+    text-align: center;
+    padding: 30px;
+    background-color: #f4f6f9;
+}
 
-        h1 {
-            margin-bottom: 30px;
-        }
+h1 {
+    margin-bottom: 20px;
+}
 
-        input {
-            padding: 10px;
-            margin: 10px;
-            width: 250px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-        }
+input {
+    padding: 10px;
+    margin: 10px;
+    width: 250px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
 
-        button {
-            padding: 10px 20px;
-            margin-top: 15px;
-            border: none;
-            border-radius: 8px;
-            background-color: #007bff;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+}
 
-        button:hover {
-            background-color: #0056b3;
-        }
+button:hover {
+    background-color: #0056b3;
+}
 
-        .sonuc {
-            margin-top: 30px;
-            font-size: 20px;
-            font-weight: bold;
-        }
+.bar-container {
+    width: 300px;
+    height: 25px;
+    background-color: #ddd;
+    margin: 20px auto;
+    border-radius: 15px;
+    overflow: hidden;
+}
 
-        .bar-container {
-            width: 300px;
-            height: 25px;
-            background-color: #ddd;
-            margin: 20px auto;
-            border-radius: 15px;
-            overflow: hidden;
-        }
+.bar {
+    height: 100%;
+    width: 0%;
+    transition: 0.5s;
+}
 
-        .bar {
-            height: 100%;
-            width: 0%;
-            background-color: red;
-            transition: 0.5s;
-        }
-
-        .aciklama {
-            margin-top: 15px;
-            font-size: 18px;
-        }
-    </style>
+#profil {
+    margin-top: 15px;
+    font-size: 18px;
+    font-weight: bold;
+}
+</style>
 </head>
 
 <body>
 
-    <h1>Finansal Disiplin Skoru (FİDAS)</h1>
+<h1>FİDAS - Finansal Disiplin Sistemi</h1>
 
-    <input type="number" id="gelir" placeholder="Aylık Gelir (₺)">
-    <br>
-    <input type="number" id="gider" placeholder="Aylık Gider (₺)">
-    <br>
-    <input type="number" id="plansiz" placeholder="Plansız Harcama Sayısı">
-    <br>
+<input type="number" id="gelir" placeholder="Aylık Gelir (₺)">
+<br>
+<input type="number" id="gider" placeholder="Aylık Gider (₺)">
+<br>
+<input type="number" id="plansiz" placeholder="Plansız Harcama Sayısı">
+<br>
 
-    <button onclick="hesapla()">Skoru Hesapla</button>
+<button onclick="hesapla()">Skoru Hesapla</button>
 
-    <div class="sonuc" id="sonuc"></div>
+<h2 id="sonuc"></h2>
 
-    <div class="bar-container">
-        <div id="skorBar" class="bar"></div>
-    </div>
+<div class="bar-container">
+    <div id="skorBar" class="bar"></div>
+</div>
 
-    <div class="aciklama" id="yorum"></div>
+<div id="yorum"></div>
+<div id="profil"></div>
 
-    <script>
-        function hesapla() {
+<script>
+function hesapla() {
 
-            let gelir = parseFloat(document.getElementById("gelir").value);
-            let gider = parseFloat(document.getElementById("gider").value);
-            let plansiz = parseFloat(document.getElementById("plansiz").value);
+let gelir = parseFloat(document.getElementById("gelir").value);
+let gider = parseFloat(document.getElementById("gider").value);
+let plansiz = parseFloat(document.getElementById("plansiz").value);
 
-            if (!gelir || !gider) {
-                alert("Lütfen tüm alanları doldurun.");
-                return;
-            }
+if (!gelir || !gider) {
+    alert("Lütfen tüm alanları doldurun.");
+    return;
+}
 
-            let tasarruf = gelir - gider;
-            let oran = tasarruf / gelir;
+let tasarruf = gelir - gider;
+let oran = tasarruf / gelir;
 
-            let skor = 50;
+let skor = 50;
 
-            if (oran > 0.3) {
-                skor += 30;
-            } else if (oran > 0.1) {
-                skor += 15;
-            }
+if (oran > 0.3) {
+    skor += 30;
+} else if (oran > 0.1) {
+    skor += 15;
+}
 
-            skor -= plansiz * 5;
+skor -= plansiz * 5;
 
-            if (skor > 100) skor = 100;
-            if (skor < 0) skor = 0;
+if (skor > 100) skor = 100;
+if (skor < 0) skor = 0;
 
-            document.getElementById("sonuc").innerHTML = "Toplam Skor: " + skor + "/100";
+document.getElementById("sonuc").innerHTML = "Toplam Skor: " + skor + "/100";
 
-            let bar = document.getElementById("skorBar");
-            bar.style.width = skor + "%";
+let bar = document.getElementById("skorBar");
+bar.style.width = skor + "%";
 
-            if (skor < 40) {
-                bar.style.backgroundColor = "red";
-                document.getElementById("yorum").innerHTML = "❗ Riskli Finansal Davranış";
-            } else if (skor < 70) {
-                bar.style.backgroundColor = "orange";
-                document.getElementById("yorum").innerHTML = "⚠ Orta Seviye Finansal Disiplin";
-            } else {
-                bar.style.backgroundColor = "green";
-                document.getElementById("yorum").innerHTML = "✅ Güçlü Finansal Disiplin";
-            }
-        }
-    </script>
+if (skor < 40) {
+    bar.style.backgroundColor = "red";
+    document.getElementById("yorum").innerHTML = "❗ Riskli Finansal Davranış";
+    document.getElementById("profil").innerHTML = "Profil: Harcama Kontrolü Zayıf";
+}
+else if (skor < 70) {
+    bar.style.backgroundColor = "orange";
+    document.getElementById("yorum").innerHTML = "⚠ Orta Seviye Finansal Disiplin";
+    document.getElementById("profil").innerHTML = "Profil: Dengeli Ama Geliştirilebilir";
+}
+else {
+    bar.style.backgroundColor = "green";
+    document.getElementById("yorum").innerHTML = "✅ Güçlü Finansal Disiplin";
+    document.getElementById("profil").innerHTML = "Profil: Tasarrufçu ve Kontrollü";
+}
+
+}
+</script>
 
 </body>
 </html>
