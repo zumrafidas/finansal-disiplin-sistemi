@@ -2,92 +2,130 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>MatFin - Dijital Finans Koçu</title>
+    <title>MatFin Pro - Finansal Modelleme</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --p:#6366f1; --s:#10b981; --d:#f43f5e; --bg:#020617; --card:#0f172a; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: white; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .card { background: var(--card); padding: 40px; border-radius: 35px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6); width: 100%; max-width: 500px; border: 1px solid #1e293b; text-align: center; }
-        .shield-logo { width: 80px; height: 80px; background: linear-gradient(135deg, var(--p), var(--s)); border-radius: 22px; margin: 0 auto 25px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4); }
-        .shield-logo::after { content: "🛡️"; font-size: 40px; }
-        h1 { font-size: 32px; background: linear-gradient(to right, #818cf8, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; font-weight: 850; letter-spacing: -1px; }
-        .step-container { display: flex; justify-content: space-between; margin: 30px 0; text-align: center; }
-        .step { flex: 1; font-size: 11px; color: #64748b; }
-        .step-icon { width: 35px; height: 35px; background: #1e293b; border-radius: 10px; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; border: 1px solid #334155; }
-        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 25px; text-align: left; }
-        label { display: block; font-size: 11px; font-weight: 700; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase; }
-        input { width: 100%; background: #1e293b; border: 1px solid #334155; padding: 14px; border-radius: 15px; color: white; font-size: 16px; outline: none; box-sizing: border-box; }
-        .btn { width: 100%; padding: 18px; border: none; border-radius: 18px; color: white; font-weight: 800; cursor: pointer; margin-top: 20px; transition: 0.3s; font-size: 16px; }
-        .btn-primary { background: linear-gradient(135deg, var(--p), #4f46e5); box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4); }
-        .results { display: none; margin-top: 30px; border-top: 2px solid #1e293b; padding-top: 25px; }
-        .coach-section { background: rgba(99, 102, 241, 0.1); border: 1px dashed var(--p); border-radius: 20px; padding: 20px; margin-top: 20px; text-align: left; }
-        .coach-header { font-weight: 800; color: var(--p); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-        .insight-text { font-size: 14px; line-height: 1.6; color: #cbd5e1; }
-        .math-tip { margin-top: 15px; font-size: 12px; color: var(--s); font-style: italic; background: rgba(16, 185, 129, 0.1); padding: 10px; border-radius: 10px; }
-        .score-display { font-size: 52px; font-weight: 900; color: var(--s); margin: 10px 0; }
-        .chart-box { width: 100%; max-width: 240px; margin: 20px auto; }
+        :root { --p: #6366f1; --s: #10b981; --d: #f43f5e; --bg: #020617; --card: #0f172a; --text: #ffffff; --border: #1e293b; }
+        [data-theme="light"] { --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --border: #e2e8f0; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; min-height: 100vh; transition: 0.3s; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .card { background: var(--card); padding: 35px; border-radius: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); width: 100%; max-width: 580px; border: 1px solid var(--border); position: relative; text-align: center; }
+        .theme-toggle { position: absolute; top: 15px; right: 15px; background: var(--border); border: none; padding: 8px; border-radius: 10px; cursor: pointer; }
+        
+        /* Slogan Stili */
+        .slogan-container { margin: 15px 0 25px; padding: 10px; border-bottom: 1px solid var(--border); }
+        .slogan-main { font-size: 18px; font-weight: 800; background: linear-gradient(135deg, var(--p), var(--s)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .slogan-sub { font-size: 11px; color: #64748b; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; }
+
+        .input-group { margin-bottom: 18px; text-align: left; }
+        label { display: block; font-size: 11px; font-weight: 700; margin-bottom: 6px; color: #64748b; }
+        input { width: 100%; background: var(--bg); border: 1px solid var(--border); padding: 14px; border-radius: 12px; color: var(--text); box-sizing: border-box; font-size: 15px; transition: 0.2s; }
+        input:focus { border-color: var(--p); outline: none; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2); }
+        
+        .btn { width: 100%; padding: 16px; border: none; border-radius: 15px; font-weight: 800; cursor: pointer; transition: 0.3s; font-size: 16px; margin-top: 10px; }
+        .btn-primary { background: var(--p); color: white; box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3); }
+        
+        .results { display: none; }
+        .analysis-card { background: var(--bg); border-radius: 18px; padding: 22px; margin-top: 18px; border-left: 5px solid var(--p); text-align: left; }
+        .stat-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 20px 0; }
+        .stat-box { background: var(--bg); padding: 12px; border-radius: 14px; border: 1px solid var(--border); }
+        .stat-val { display: block; font-weight: 800; font-size: 18px; color: var(--s); }
+        .stat-lab { font-size: 10px; color: #64748b; font-weight: 600; }
     </style>
 </head>
-<body>
+<body data-theme="dark">
 <div class="card">
-    <div id="welcome-screen">
-        <div class="shield-logo"></div>
-        <h1>MATFİN</h1>
-        <p style="color:#94a3b8; font-size: 15px; margin-top: 10px;">9. Sınıf Matematik Müfredatı Odaklı <br>Kişisel Bütçe Analizi</p>
-        <div class="step-container">
-            <div class="step"><div class="step-icon">📝</div>Veri Gir</div>
-            <div class="step"><div class="step-icon">⚙️</div>Analiz Et</div>
-            <div class="step"><div class="step-icon">📊</div>Sonuç Al</div>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+    
+    <div id="setup">
+        <h1 style="margin:0; font-size: 32px; font-weight: 900; letter-spacing: -1.5px;">MatFin Pro</h1>
+        
+        <div class="slogan-container">
+            <div class="slogan-main">Bütçeni Modelle, Geleceğini Tasarla.</div>
+            <div class="slogan-sub">Finansal Disiplin ve Karar Destek Sistemi</div>
         </div>
-        <button class="btn btn-primary" onclick="baslat()">SİSTEMİ BAŞLAT</button>
+
+        <div style="display:grid; grid-template-columns:2fr 1fr; gap:12px;">
+            <div class="input-group"><label>KULLANICI ADI</label><input type="text" id="name" placeholder="Adınızı girin"></div>
+            <div class="input-group"><label>YAŞ</label><input type="number" id="age" placeholder="Yaşınız"></div>
+        </div>
+        
+        <div class="input-group"><label>AYLIK GELİR (₺)</label><input type="number" id="income" placeholder="Toplam aylık kazanç"></div>
+        
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="input-group"><label>ZORUNLU GİDERLER</label><input type="number" id="fixed" placeholder="Kira, fatura vb."></div>
+            <div class="input-group"><label>DÜRTÜSEL HARCAMA</label><input type="number" id="impulse" placeholder="İstek, eğlence"></div>
+        </div>
+        
+        <button class="btn btn-primary" onclick="analyze()">ANALİZİ ÇALIŞTIR</button>
     </div>
-    <div id="app-screen" style="display:none;">
-        <h1>GİRİŞ PANELİ</h1>
-        <div class="input-grid">
-            <div style="grid-column: span 2;"><label>Adınız</label><input type="text" id="isim" placeholder="İsminizi buraya yazın"></div>
-            <div><label>Gelir (₺)</label><input type="number" id="gelir" placeholder="0"></div>
-            <div><label>Yaş</label><input type="number" id="yas" placeholder="15"></div>
-            <div style="grid-column: span 2;"><label>Giderler (₺)</label><input type="number" id="gider" placeholder="0"></div>
-            <div style="grid-column: span 2;"><label>Dürtüsel Harcama (₺)</label><input type="number" id="plansiz" placeholder="0"></div>
+
+    <div id="results" class="results">
+        <h3 id="res-title" style="margin:0 0 15px 0;"></h3>
+        
+        <div class="stat-row">
+            <div class="stat-box"><span class="stat-lab">DİSİPLİN PUANI</span><span class="stat-val" id="res-score"></span></div>
+            <div class="stat-box"><span class="stat-lab">NET TASARRUF</span><span class="stat-val" id="res-save"></span></div>
+            <div class="stat-box"><span class="stat-lab">YAŞ ETKİSİ</span><span class="stat-val" id="res-age-factor"></span></div>
         </div>
-        <button class="btn btn-primary" onclick="hesapla()">MATEMATİKSEL ANALİZ YAP</button>
-        <div id="sonuclar" class="results">
-            <div id="hitap" style="font-weight: 800; font-size: 18px; color: var(--p);"></div>
-            <div class="score-display" id="skorDeger">%0</div>
-            <p style="color:#64748b; font-size: 11px; letter-spacing: 2px;">DİSİPLİN PUANI</p>
-            <div class="chart-box"><canvas id="butceGrafik"></canvas></div>
-            <div class="coach-section">
-                <div class="coach-header" id="coach-title">🚀 Finans Koçu</div>
-                <div id="analizYorum" class="insight-text"></div>
-                <div id="mat-tip" class="math-tip"></div>
-            </div>
+        
+        <div style="max-width: 220px; margin: 0 auto;"><canvas id="myChart"></canvas></div>
+        
+        <div class="analysis-card">
+            <b style="font-size: 13px; color: var(--p);">🛡️ FİNANSAL KOÇ ANALİZİ</b>
+            <p id="res-coach" style="font-size: 14px; margin: 12px 0; line-height: 1.6; opacity: 0.9;"></p>
         </div>
+        
+        <button class="btn btn-primary" style="background:var(--border); color:var(--text)" onclick="location.reload()">VERİLERİ SIFIRLA</button>
     </div>
 </div>
+
 <script>
-    function baslat() { document.getElementById('welcome-screen').style.display = 'none'; document.getElementById('app-screen').style.display = 'block'; }
-    function hesapla() {
-        const isim = document.getElementById('isim').value || "Kullanıcı";
-        const gel = parseFloat(document.getElementById('gelir').value) || 1;
-        const zor = parseFloat(document.getElementById('gider').value) || 0;
-        const plan = parseFloat(document.getElementById('plansiz').value) || 0;
-        const tasarruf = Math.max(0, gel - (zor + plan));
-        let tOran = (tasarruf / gel) * 100;
-        let pOran = (plan / gel) * 100;
-        let skor = Math.round((tOran * 0.7) + (30 - (pOran * 1.5)));
-        let finalSkor = Math.max(0, Math.min(100, skor));
-        document.getElementById('sonuclar').style.display = 'block';
-        document.getElementById('skorDeger').innerText = "%" + finalSkor;
-        document.getElementById('hitap').innerText = `Sayın ${isim},`;
-        document.getElementById('coach-title').innerText = `🚀 ${isim} İçin Finans Analizi`;
-        let yorum = finalSkor > 75 ? "Müthiş bir disiplin! Gelir-gider dengeniz ideal seviyede." : (finalSkor > 40 ? "Orta düzey disiplin. Harcamalarınızda biraz daha kısıtlamaya gidebilirsiniz." : "Bütçeniz alarm veriyor! Acil tasarruf önlemleri almalısınız.");
-        let matIpucu = finalSkor > 75 ? "Matematiksel Tavsiye: Birikimleriniz geometrik bir dizi şeklinde büyüme potansiyeli taşıyor." : "Matematiksel Tavsiye: Gider-gelir oranını iyileştirerek skorunuzu artırabilirsiniz.";
-        document.getElementById('analizYorum').innerText = yorum;
-        document.getElementById('mat-tip').innerText = matIpucu;
-        const ctx = document.getElementById('butceGrafik').getContext('2d');
-        if (window.myChart) window.myChart.destroy();
-        window.myChart = new Chart(ctx, { type: 'doughnut', data: { labels: ['Sabit', 'Plansız', 'Tasarruf'], datasets: [{ data: [zor, plan, tasarruf], backgroundColor: ['#6366f1', '#f43f5e', '#10b981'], borderWidth: 0 }] }, options: { animation: { duration: 1000 }, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } } } });
+    function toggleTheme() { const b = document.body; b.setAttribute('data-theme', b.getAttribute('data-theme')==='dark'?'light':'dark'); }
+
+    function analyze() {
+        const name = document.getElementById('name').value || "Değerli Kullanıcı";
+        const age = parseInt(document.getElementById('age').value) || 0;
+        const inc = parseFloat(document.getElementById('income').value) || 1;
+        const fix = parseFloat(document.getElementById('fixed').value) || 0;
+        const imp = parseFloat(document.getElementById('impulse').value) || 0;
+        
+        const save = Math.max(0, inc - (fix + imp));
+        const saveRatio = (save / inc);
+        
+        // Yaş Analiz Modülü
+        const ageFactor = age > 0 ? Math.min(2.5, Math.max(1.0, age / 18)).toFixed(1) : 1.0;
+        
+        let score = Math.round((saveRatio * 80) + (20 - (imp/inc * 100 * ageFactor)));
+        score = Math.max(0, Math.min(100, score));
+
+        document.getElementById('setup').style.display = 'none';
+        document.getElementById('results').style.display = 'block';
+        document.getElementById('res-title').innerText = `Rapor: ${name}`;
+        document.getElementById('res-score').innerText = `%${score}`;
+        document.getElementById('res-save').innerText = `${save}₺`;
+        document.getElementById('res-age-factor').innerText = `x${ageFactor}`;
+
+        let comment = "";
+        if (age < 22 && age > 0) {
+            comment = `Genç yaş grubu avantajına sahipsiniz. Matematiksel olarak, erken yaşta yapılan her 1₺ tasarruf, 10 yıl sonra x5 çarpanı ile karşınıza çıkacaktır. Harcamalarınızdaki %${((imp/inc)*100).toFixed(1)}'lik dürtüsel payı %10'a düşürmek hedeflenmelidir.`;
+        } else if (age >= 22) {
+            comment = `Olgun finansal yönetim aşamasındasınız. Yaş katsayınız (x${ageFactor}) dürtüsel hataları artık daha yüksek risk olarak tanımlıyor. Birikimlerinizi enflasyon karşısında korumak için sepet yapmalısınız.`;
+        } else {
+            comment = `Verileriniz işlendi. Finansal disiplin skorunuz %${score}. Bütçe dengenizi korumak için sabit giderlerin gelire oranını %50'nin altında tutmaya özen gösterin.`;
+        }
+
+        document.getElementById('res-coach').innerText = comment;
+
+        new Chart(document.getElementById('myChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Sabit', 'Dürtüsel', 'Tasarruf'],
+                datasets: [{ data: [fix, imp, save], backgroundColor: ['#6366f1', '#f43f5e', '#10b981'], borderWidth: 0 }]
+            },
+            options: { plugins: { legend: { display: false } }, cutout: '82%' }
+        });
     }
 </script>
 </body>
