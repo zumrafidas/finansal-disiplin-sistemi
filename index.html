@@ -13,18 +13,19 @@
         .card { background: var(--card); padding: 35px; border-radius: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); width: 100%; max-width: 580px; border: 1px solid var(--border); position: relative; text-align: center; }
         .theme-toggle { position: absolute; top: 15px; right: 15px; background: var(--border); border: none; padding: 8px; border-radius: 10px; cursor: pointer; }
         
-        /* Slogan Stili */
-        .slogan-container { margin: 15px 0 25px; padding: 10px; border-bottom: 1px solid var(--border); }
-        .slogan-main { font-size: 18px; font-weight: 800; background: linear-gradient(135deg, var(--p), var(--s)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .slogan-sub { font-size: 11px; color: #64748b; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .shield-logo { width: 70px; height: 70px; background: linear-gradient(135deg, var(--p), var(--s)); border-radius: 20px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 35px; box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3); }
+
+        .slogan-container { margin: 25px 0; padding: 15px 0; }
+        .slogan-main { font-size: 22px; font-weight: 800; background: linear-gradient(135deg, var(--p), var(--s)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.3; }
+        .slogan-sub { font-size: 12px; color: #64748b; margin-top: 10px; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; }
 
         .input-group { margin-bottom: 18px; text-align: left; }
         label { display: block; font-size: 11px; font-weight: 700; margin-bottom: 6px; color: #64748b; }
-        input { width: 100%; background: var(--bg); border: 1px solid var(--border); padding: 14px; border-radius: 12px; color: var(--text); box-sizing: border-box; font-size: 15px; transition: 0.2s; }
-        input:focus { border-color: var(--p); outline: none; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2); }
+        input { width: 100%; background: var(--bg); border: 1px solid var(--border); padding: 14px; border-radius: 12px; color: var(--text); box-sizing: border-box; font-size: 15px; }
         
         .btn { width: 100%; padding: 16px; border: none; border-radius: 15px; font-weight: 800; cursor: pointer; transition: 0.3s; font-size: 16px; margin-top: 10px; }
         .btn-primary { background: var(--p); color: white; box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3); }
+        .btn-primary:hover { transform: translateY(-3px); opacity: 0.9; }
         
         .results { display: none; }
         .analysis-card { background: var(--bg); border-radius: 18px; padding: 22px; margin-top: 18px; border-left: 5px solid var(--p); text-align: left; }
@@ -38,51 +39,53 @@
 <div class="card">
     <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
     
-    <div id="setup">
-        <h1 style="margin:0; font-size: 32px; font-weight: 900; letter-spacing: -1.5px;">MatFin Pro</h1>
+    <div id="welcome-screen">
+        <div class="shield-logo">🛡️</div>
+        <h1 style="margin:0; font-size: 36px; font-weight: 900; letter-spacing: -1.5px;">MatFin Pro</h1>
         
         <div class="slogan-container">
-            <div class="slogan-main">Bütçeni Modelle, Geleceğini Tasarla.</div>
-            <div class="slogan-sub">Finansal Disiplin ve Karar Destek Sistemi</div>
+            <div class="slogan-main">Bütçeni Modelle,<br>Geleceğini Tasarla.</div>
+            <div class="slogan-sub">Matematiksel Karar Destek Sistemi</div>
         </div>
 
+        <p style="color: #64748b; font-size: 14px; margin-bottom: 30px;">9. Sınıf müfredatı ile finansal okuryazarlığın buluşma noktası.</p>
+        
+        <button class="btn btn-primary" onclick="showSetup()">SİSTEMİ BAŞLAT</button>
+    </div>
+
+    <div id="setup" style="display: none;">
+        <h2 style="margin-top: 0;">Veri Giriş Paneli</h2>
         <div style="display:grid; grid-template-columns:2fr 1fr; gap:12px;">
-            <div class="input-group"><label>KULLANICI ADI</label><input type="text" id="name" placeholder="Adınızı girin"></div>
+            <div class="input-group"><label>KULLANICI ADI</label><input type="text" id="name" placeholder="Adınız"></div>
             <div class="input-group"><label>YAŞ</label><input type="number" id="age" placeholder="Yaşınız"></div>
         </div>
-        
-        <div class="input-group"><label>AYLIK GELİR (₺)</label><input type="number" id="income" placeholder="Toplam aylık kazanç"></div>
-        
+        <div class="input-group"><label>AYLIK GELİR (₺)</label><input type="number" id="income" placeholder="0"></div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-            <div class="input-group"><label>ZORUNLU GİDERLER</label><input type="number" id="fixed" placeholder="Kira, fatura vb."></div>
+            <div class="input-group"><label>SABİT GİDERLER</label><input type="number" id="fixed" placeholder="Kira, fatura"></div>
             <div class="input-group"><label>DÜRTÜSEL HARCAMA</label><input type="number" id="impulse" placeholder="İstek, eğlence"></div>
         </div>
-        
-        <button class="btn btn-primary" onclick="analyze()">ANALİZİ ÇALIŞTIR</button>
+        <button class="btn btn-primary" onclick="analyze()">STRATEJİYİ HESAPLA</button>
     </div>
 
     <div id="results" class="results">
         <h3 id="res-title" style="margin:0 0 15px 0;"></h3>
-        
         <div class="stat-row">
             <div class="stat-box"><span class="stat-lab">DİSİPLİN PUANI</span><span class="stat-val" id="res-score"></span></div>
             <div class="stat-box"><span class="stat-lab">NET TASARRUF</span><span class="stat-val" id="res-save"></span></div>
             <div class="stat-box"><span class="stat-lab">YAŞ ETKİSİ</span><span class="stat-val" id="res-age-factor"></span></div>
         </div>
-        
         <div style="max-width: 220px; margin: 0 auto;"><canvas id="myChart"></canvas></div>
-        
         <div class="analysis-card">
             <b style="font-size: 13px; color: var(--p);">🛡️ FİNANSAL KOÇ ANALİZİ</b>
             <p id="res-coach" style="font-size: 14px; margin: 12px 0; line-height: 1.6; opacity: 0.9;"></p>
         </div>
-        
-        <button class="btn btn-primary" style="background:var(--border); color:var(--text)" onclick="location.reload()">VERİLERİ SIFIRLA</button>
+        <button class="btn btn-primary" style="background:var(--border); color:var(--text)" onclick="location.reload()">SİSTEMİ SIFIRLA</button>
     </div>
 </div>
 
 <script>
     function toggleTheme() { const b = document.body; b.setAttribute('data-theme', b.getAttribute('data-theme')==='dark'?'light':'dark'); }
+    function showSetup() { document.getElementById('welcome-screen').style.display = 'none'; document.getElementById('setup').style.display = 'block'; }
 
     function analyze() {
         const name = document.getElementById('name').value || "Değerli Kullanıcı";
@@ -93,8 +96,6 @@
         
         const save = Math.max(0, inc - (fix + imp));
         const saveRatio = (save / inc);
-        
-        // Yaş Analiz Modülü
         const ageFactor = age > 0 ? Math.min(2.5, Math.max(1.0, age / 18)).toFixed(1) : 1.0;
         
         let score = Math.round((saveRatio * 80) + (20 - (imp/inc * 100 * ageFactor)));
@@ -107,15 +108,9 @@
         document.getElementById('res-save').innerText = `${save}₺`;
         document.getElementById('res-age-factor').innerText = `x${ageFactor}`;
 
-        let comment = "";
-        if (age < 22 && age > 0) {
-            comment = `Genç yaş grubu avantajına sahipsiniz. Matematiksel olarak, erken yaşta yapılan her 1₺ tasarruf, 10 yıl sonra x5 çarpanı ile karşınıza çıkacaktır. Harcamalarınızdaki %${((imp/inc)*100).toFixed(1)}'lik dürtüsel payı %10'a düşürmek hedeflenmelidir.`;
-        } else if (age >= 22) {
-            comment = `Olgun finansal yönetim aşamasındasınız. Yaş katsayınız (x${ageFactor}) dürtüsel hataları artık daha yüksek risk olarak tanımlıyor. Birikimlerinizi enflasyon karşısında korumak için sepet yapmalısınız.`;
-        } else {
-            comment = `Verileriniz işlendi. Finansal disiplin skorunuz %${score}. Bütçe dengenizi korumak için sabit giderlerin gelire oranını %50'nin altında tutmaya özen gösterin.`;
-        }
-
+        let comment = age < 22 && age > 0 ? 
+            `Genç yaş avantajınız var. Matematiksel olarak bugün tasarruf edeceğiniz her 1₺, gelecekteki finansal özgürlüğünüzün katsayısını artıracaktır.` : 
+            `Analiz tamamlandı. Yaş katsayınız ve bütçe dengeniz harcama disiplininizi %${score} olarak belirledi.`;
         document.getElementById('res-coach').innerText = comment;
 
         new Chart(document.getElementById('myChart'), {
