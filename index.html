@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -25,7 +26,6 @@
         
         .btn { width: 100%; padding: 16px; border: none; border-radius: 15px; font-weight: 800; cursor: pointer; transition: 0.3s; font-size: 16px; margin-top: 10px; }
         .btn-primary { background: var(--p); color: white; box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3); }
-        .btn-primary:hover { transform: translateY(-3px); opacity: 0.9; }
         
         .results { display: none; }
         .analysis-card { background: var(--bg); border-radius: 18px; padding: 22px; margin-top: 18px; border-left: 5px solid var(--p); text-align: left; }
@@ -42,14 +42,11 @@
     <div id="welcome-screen">
         <div class="shield-logo">🛡️</div>
         <h1 style="margin:0; font-size: 36px; font-weight: 900; letter-spacing: -1.5px;">MatFin Pro</h1>
-        
         <div class="slogan-container">
             <div class="slogan-main">Bütçeni Modelle,<br>Geleceğini Tasarla.</div>
             <div class="slogan-sub">Matematiksel Karar Destek Sistemi</div>
         </div>
-
-        <p style="color: #64748b; font-size: 14px; margin-bottom: 30px;">9. Sınıf müfredatı ile finansal okuryazarlığın buluşma noktası.</p>
-        
+        <p style="color: #64748b; font-size: 14px; margin-bottom: 30px;">Finansal okuryazarlığınızı analiz eden akıllı algoritmalar.</p>
         <button class="btn btn-primary" onclick="showSetup()">SİSTEMİ BAŞLAT</button>
     </div>
 
@@ -76,10 +73,10 @@
         </div>
         <div style="max-width: 220px; margin: 0 auto;"><canvas id="myChart"></canvas></div>
         <div class="analysis-card">
-            <b style="font-size: 13px; color: var(--p);">🛡️ FİNANSAL KOÇ ANALİZİ</b>
-            <p id="res-coach" style="font-size: 14px; margin: 12px 0; line-height: 1.6; opacity: 0.9;"></p>
+            <b style="font-size: 13px; color: var(--p);">🛡️ GELİŞMİŞ FİNANSAL KOÇ ANALİZİ</b>
+            <p id="res-coach" style="font-size: 13px; margin: 12px 0; line-height: 1.6; opacity: 0.9;"></p>
         </div>
-        <button class="btn btn-primary" style="background:var(--border); color:var(--text)" onclick="location.reload()">SİSTEMİ SIFIRLA</button>
+        <button class="btn btn-primary" style="background:var(--border); color:var(--text)" onclick="location.reload()">YENİ ANALİZ YAP</button>
     </div>
 </div>
 
@@ -95,10 +92,11 @@
         const imp = parseFloat(document.getElementById('impulse').value) || 0;
         
         const save = Math.max(0, inc - (fix + imp));
-        const saveRatio = (save / inc);
+        const saveRatio = (save / inc) * 100;
+        const impulseRatio = (imp / inc) * 100;
         const ageFactor = age > 0 ? Math.min(2.5, Math.max(1.0, age / 18)).toFixed(1) : 1.0;
         
-        let score = Math.round((saveRatio * 80) + (20 - (imp/inc * 100 * ageFactor)));
+        let score = Math.round((saveRatio * 0.75) + (25 - (impulseRatio * ageFactor)));
         score = Math.max(0, Math.min(100, score));
 
         document.getElementById('setup').style.display = 'none';
@@ -108,9 +106,30 @@
         document.getElementById('res-save').innerText = `${save}₺`;
         document.getElementById('res-age-factor').innerText = `x${ageFactor}`;
 
-        let comment = age < 22 && age > 0 ? 
-            `Genç yaş avantajınız var. Matematiksel olarak bugün tasarruf edeceğiniz her 1₺, gelecekteki finansal özgürlüğünüzün katsayısını artıracaktır.` : 
-            `Analiz tamamlandı. Yaş katsayınız ve bütçe dengeniz harcama disiplininizi %${score} olarak belirledi.`;
+        let comment = "";
+        // Yaş ve Skor bazlı detaylı yorum algoritması
+        if (score >= 80) {
+            comment = `Harika bir disiplin! Gelirinizin %${saveRatio.toFixed(1)}'ini tasarrufa aktarabiliyorsunuz. `;
+            if (age > 0 && age < 25) {
+                comment += `Yaş katsayınızın (x${ageFactor}) düşük olması, bu birikimleri uzun vadeli yatırımlara çevirmeniz için size büyük bir matematiksel avantaj sağlıyor. Geometrik dizi etkisiyle bu tasarruf hızı sizi finansal özgürlüğe çok hızlı ulaştıracaktır.`;
+            } else {
+                comment += `Bu seviyedeki bir disiplin, olgunluk dönemi finansal yönetimi için mükemmel bir örnektir. Sabit giderlerinizi korumaya ve dürtüsel harcamalarınızı bu düşük seviyede tutmaya devam edin.`;
+            }
+        } else if (score >= 50) {
+            comment = `Bütçeniz dengeli ancak optimizasyon gerektiriyor. Gelirinizin %${impulseRatio.toFixed(1)}'lik kısmı dürtüsel harcamalara gidiyor. `;
+            if (age >= 25) {
+                comment += `Yaş katsayınız (x${ageFactor}) nedeniyle plansız harcamaların bütçenizdeki yıkıcı etkisi artmaya başlamış. Bu harcamaları %10'un altına çekmek skorunuzu anında %90 bandına taşıyacaktır.`;
+            } else {
+                comment += `Genç yaşlarda bu dengeyi yakalamak güzel, ancak tasarruf oranınızı biraz daha artırarak (örneğin %20 kuralı) gelecek projeksiyonunuzu güçlendirmelisiniz.`;
+            }
+        } else {
+            comment = `Bütçeniz şu an matematiksel olarak riskli bölgede. Toplam giderleriniz gelirinizin büyük bir kısmını yutuyor. `;
+            comment += `Acil Tavsiye: Sabit giderlerinizi gözden geçirin ve %${impulseRatio.toFixed(1)} olan dürtüsel harcama oranını sıfıra yaklaştırın. `;
+            if (age > 0) {
+                comment += `x${ageFactor} yaş katsayınız, yaptığınız hataları daha sert cezalandırıyor; bu da toparlanma sürenizi uzatabilir. Lütfen tasarruf moduna geçin.`;
+            }
+        }
+
         document.getElementById('res-coach').innerText = comment;
 
         new Chart(document.getElementById('myChart'), {
